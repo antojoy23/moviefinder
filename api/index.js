@@ -2,6 +2,7 @@ import express from 'express';
 import fetch from 'node-fetch';
 import cors from 'cors';
 import { configDotenv } from 'dotenv';
+import { RESPONSE } from './test/testData.mjs';
 
 const app = express();
 const port = 9000;
@@ -10,21 +11,27 @@ configDotenv();
 
 const OMDB_API_KEY = process.env.OMDB_API_KEY;
 
+// added to handle cors error
 app.use(cors());
+// added to parse request params as json
+app.use(express.json());
 
 app.get('/', (req, res) => {
     res.send("All working fine");
 });
 
-app.get('/omdb', async (req, res) => {
+app.post('/api/search', async (req, res) => {
+    const requestBody = req.body;
     let response = {}
+    let queryParams = `s=${requestBody.searchTerm}&apikey=${OMDB_API_KEY}`;
+    if (requestBody.searchType) queryParams = `${queryParams}&type${requestBody.searchType}`
     try {
-        //{"Response":"False","Error":"Invalid API key!"} - Error
-        response = await fetch(`http://www.omdbapi.com/?s=star+wars&apikey=${OMDB_API_KEY}&type=movie&page=2`);
-        console.log("Headers", response.headers)
+        // Example error response from ODMB - {"Response":"False","Error":"Invalid API key!"} - Error
+        let uri = encodeURI(`http://www.omdbapi.com/?${queryParams}`)
+        response = await fetch(uri);
         response = await response.json();
+        response = RESPONSE;
     } catch (ex) {
-        console.log(ex);
         response.error = true
     }
     res.json({

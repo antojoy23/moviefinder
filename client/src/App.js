@@ -1,47 +1,49 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import './App.css';
+import { searchTitle } from './utils/movieApi';
 
 function App() {
-  const [movieList, setMovieList] = useState();
+  const [titleList, setTitleList] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchType, setSearchType] = useState("any");
 
-  useEffect(() => {
-    let controller = new AbortController();
-    let signal = controller.signal;
-
-    const fetchMovies = async () => {
-      try {
-        const result = await fetch('http://localhost:9000/omdb', {
-          signal
-        });
-        const movie = await result.json();
-        console.log("Result ", movie.response);
-        setMovieList(movie.response);
-      } catch (ex) {
-        if (ex.name === "AbortError") {
-          console.warn("Request aborted");
-        } else {
-          console.error(ex.name);
+  const checkAndSearchMovie = async (e) => {
+    if (e.which === 13) {
+      if (searchTerm.length > 0) {
+        try {
+          const moviesData = await searchTitle({ searchTerm, searchType });
+          setTitleList(moviesData["Search"]);
+        } catch (ex) {
+          console.error("Error searching title: ", ex);
         }
+      } else {
+        alert("Enter a valid search");
       }
     }
-    fetchMovies();
-    return () => {
-      controller && controller.abort();
-    }
-  }, []);
-
-  const resolveLayout = () => {
-    if (movieList) {
-      return (
-        <>{JSON.stringify(movieList)}</>
-      )
-    } else {
-      return (<>Fetching results ...</>)
-    }
   }
+
+  const handleTypeChange = (e) => {
+    setSearchType(e.target.value);
+  }
+
   return (
     <div>
-      {resolveLayout()}
+      <input type='search' onKeyDown={checkAndSearchMovie} value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+      <input type="radio" id="any" onChange={handleTypeChange} name="type" value="any" checked={searchType === "any"} />
+      <label htmlFor="any">Any</label>
+      <input type="radio" id="movie" onChange={handleTypeChange} name="type" value="movie" checked={searchType === "movie"} />
+      <label htmlFor="movie">Movies</label>
+      <input type="radio" id="series" onChange={handleTypeChange} name="type" value="series" checked={searchType === "series"} />
+      <label htmlFor="series">Series</label>
+      <input type="radio" id="episodes" onChange={handleTypeChange} name="type" value="episode" checked={searchType === "episode"} />
+      <label htmlFor="episodes">Episodes</label>
+      <ul>
+        {
+          titleList.map((title) => {
+            return <li key={title["imdbID"]}>{title["Title"]} | {title["Year"]}</li>
+          })
+        }
+      </ul>
     </div>
   );
 }

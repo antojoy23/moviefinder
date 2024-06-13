@@ -4,6 +4,9 @@
 client/node_modules
 api/node_modules
 
+# dev test file
+api/test/
+
 #env
 api/.env
 client/.env
