@@ -1,49 +1,38 @@
 import { useState } from 'react';
-import './App.css';
+
 import { searchTitle } from './utils/movieApi';
+import TitleListing from './components/TitleListing/TitleListing';
+import DetailsPanel from './components/DetailsPanel/DetailsPanel';
+import Header from './components/Header/Header';
+
+import { StyledMainContainer } from './App.style';
 
 function App() {
   const [titleList, setTitleList] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchType, setSearchType] = useState("any");
+  const [selectedTitle, setSelectedTitle] = useState();
 
-  const checkAndSearchMovie = async (e) => {
-    if (e.which === 13) {
-      if (searchTerm.length > 0) {
-        try {
-          const moviesData = await searchTitle({ searchTerm, searchType });
-          setTitleList(moviesData["Search"]);
-        } catch (ex) {
-          console.error("Error searching title: ", ex);
-        }
-      } else {
-        alert("Enter a valid search");
-      }
+  const onTitleSelect = (title) => {
+    setSelectedTitle(title);
+  }
+
+  const handleTitleSearch = async ({ searchTerm, searchType }) => {
+    try {
+      const moviesData = await searchTitle({ searchTerm, searchType });
+      setTitleList(moviesData["Search"]);
+    } catch (ex) {
+      console.log(ex);
+      alert("Error Fetching Titles : " + ex["Error"]);
     }
-  }
-
-  const handleTypeChange = (e) => {
-    setSearchType(e.target.value);
-  }
+  };
 
   return (
-    <div>
-      <input type='search' onKeyDown={checkAndSearchMovie} value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
-      <input type="radio" id="any" onChange={handleTypeChange} name="type" value="any" checked={searchType === "any"} />
-      <label htmlFor="any">Any</label>
-      <input type="radio" id="movie" onChange={handleTypeChange} name="type" value="movie" checked={searchType === "movie"} />
-      <label htmlFor="movie">Movies</label>
-      <input type="radio" id="series" onChange={handleTypeChange} name="type" value="series" checked={searchType === "series"} />
-      <label htmlFor="series">Series</label>
-      <input type="radio" id="episodes" onChange={handleTypeChange} name="type" value="episode" checked={searchType === "episode"} />
-      <label htmlFor="episodes">Episodes</label>
-      <ul>
-        {
-          titleList.map((title) => {
-            return <li key={title["imdbID"]}>{title["Title"]} | {title["Year"]}</li>
-          })
-        }
-      </ul>
+    <div style={{ height: "100vh" }}>
+      <Header onTitleSearch={handleTitleSearch} />
+      <StyledMainContainer>
+        <TitleListing titles={titleList} onTitleSelect={onTitleSelect} selectedTitle={selectedTitle} />
+        <DetailsPanel titleId={selectedTitle} />
+      </StyledMainContainer>
+
     </div>
   );
 }
