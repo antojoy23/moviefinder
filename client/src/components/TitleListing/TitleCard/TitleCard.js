@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { forwardRef } from 'react'
 import { StyledTitleCard } from './TitleCard.style'
 
-export default function TitleCard({ title, onTitleSelect }) {
+const TitleCard = forwardRef(({ title, onTitleSelect }, ref) => {
     return (
-        <StyledTitleCard onClick={onTitleSelect} data-id={title["imdbID"]}>
+        <StyledTitleCard ref={ref} onClick={onTitleSelect} data-id={title["imdbID"]}>
             <img src={title["Poster"]} alt={`${title["Title"]} Poster`} />
             <section>
                 <p className='title'>{title["Title"]}</p>
@@ -11,4 +11,6 @@ export default function TitleCard({ title, onTitleSelect }) {
             </section>
         </StyledTitleCard>
     )
-}
+});
+
+export default TitleCard;

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const StyledTitleCard = styled.article`
     display: flex;
     align-items: center;
-    padding: 20px 30px;
+    padding: 80px 30px;
     border-bottom: 1px solid rgb(221,221,221);
     cursor: pointer;
 

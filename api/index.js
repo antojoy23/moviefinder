@@ -2,6 +2,7 @@ import express from 'express';
 import fetch from 'node-fetch';
 import cors from 'cors';
 import { configDotenv } from 'dotenv';
+import { OMDB_TYPES } from './omdbConstants.mjs';
 // import { RESPONSE, SINGLE_RESPONSE } from './test/testData.mjs';
 
 const app = express();
@@ -41,7 +42,8 @@ app.post('/api/search', async (req, res) => {
     const requestBody = req.body;
     let response = {}
     let queryParams = `s=${requestBody.searchTerm}&apikey=${OMDB_API_KEY}`;
-    if (requestBody.searchType) queryParams = `${queryParams}&type=${requestBody.searchType}`
+    if (requestBody.searchType && OMDB_TYPES.includes(requestBody.searchType)) queryParams = `${queryParams}&type=${requestBody.searchType}`;
+    if (requestBody.page) queryParams = `${queryParams}&page=${requestBody.page}`;
     try {
         // Example error response from ODMB - {"Response":"False","Error":"Invalid API key!"} - Error
         let uri = encodeURI(`http://www.omdbapi.com/?${queryParams}`)

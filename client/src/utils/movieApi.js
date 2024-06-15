@@ -1,10 +1,11 @@
-export const searchTitle = ({ searchTerm, year, searchType }) => {
+export const searchTitle = ({ searchTerm, year, searchType, page }) => {
     // let controller = new AbortController();
     // let signal = controller.signal;
     const body = {
         searchTerm,
         year,
-        searchType
+        searchType,
+        page
     }
 
     return new Promise(async (resolve, reject) => {
@@ -18,7 +19,6 @@ export const searchTitle = ({ searchTerm, year, searchType }) => {
                 body: JSON.stringify(body)
             });
             const responseBody = await result.json();
-            console.log(responseBody);
             const response = responseBody["response"]
             if (response["Error"]) {
                 reject(response);

@@ -1,0 +1,1 @@
+export const OMDB_TYPES = ["movie", "series", "episode"];

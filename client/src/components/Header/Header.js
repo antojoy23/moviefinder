@@ -1,21 +1,14 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { StyledHeader } from './Header.style';
 
 import SearchIcon from '../../assets/icons/search.svg';
 
-export default function Header({ onTitleSearch }) {
-
-    const [searchTerm, setSearchTerm] = useState("");
-    const [searchType, setSearchType] = useState("any");
+export default function Header({ onTitleSearch, searchTerm, searchType, onSearchInput, onTypeChange }) {
 
     const handleTitleSearch = async (e) => {
         if (e.which === 13 || e.button === 0) {
             if (searchTerm.length > 0) {
-                try {
-                    onTitleSearch({ searchTerm, searchType });
-                } catch (ex) {
-                    console.error("Error searching title: ", ex);
-                }
+                onTitleSearch();
             } else {
                 alert("Enter a valid search");
             }
@@ -24,15 +17,7 @@ export default function Header({ onTitleSearch }) {
 
     const handleTypeChange = (e) => {
         //Todo :: Duplicate : Remove
-        let type = e.target.value;
-        setSearchType(type);
-        if (searchTerm.length > 0) {
-            try {
-                onTitleSearch({ searchTerm, searchType: type });
-            } catch (ex) {
-                console.error("Error searching title: ", ex);
-            }
-        }
+        onTypeChange(e.target.value);
     }
 
     return (
@@ -49,7 +34,7 @@ export default function Header({ onTitleSearch }) {
                     type='text'
                     onKeyDown={handleTitleSearch}
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onChange={(e) => onSearchInput(e.target.value)}
                     placeholder='Search Title'
                 />
             </div>
