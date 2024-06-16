@@ -44,6 +44,18 @@ export const StyledTitleSection = styled.section`
     .details-image-container {
         width:160px;
         height: 240px;
+        flex-shrink: 0;
+        background: rgba(0, 0, 0, 0.25);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 3px;
+        svg {
+            width: 60px;
+            height: 60px;
+            color: rgba(0, 0, 0, 0.3);
+        }
+
         img {
             width: 100%;
             height: 100%;

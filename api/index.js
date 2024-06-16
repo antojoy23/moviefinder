@@ -2,7 +2,7 @@ import express from 'express';
 import fetch from 'node-fetch';
 import cors from 'cors';
 import { configDotenv } from 'dotenv';
-import { OMDB_TYPES } from './omdbConstants.mjs';
+import { OMDB_TYPES, YEAR_RANGE_DEFAULTS } from './omdbConstants.mjs';
 // import { RESPONSE, SINGLE_RESPONSE } from './test/testData.mjs';
 
 const app = express();
@@ -36,6 +36,11 @@ app.get('/api/search/:id', async (req, res) => {
     res.json({
         response
     });
+    // setTimeout(() => {
+    //     res.json({
+    //         response
+    //     });
+    // }, 3000)
 });
 
 app.post('/api/search', async (req, res) => {
@@ -44,9 +49,15 @@ app.post('/api/search', async (req, res) => {
     let queryParams = `s=${requestBody.searchTerm}&apikey=${OMDB_API_KEY}`;
     if (requestBody.searchType && OMDB_TYPES.includes(requestBody.searchType)) queryParams = `${queryParams}&type=${requestBody.searchType}`;
     if (requestBody.page) queryParams = `${queryParams}&page=${requestBody.page}`;
+    // if (requestBody.year) {
+    //     if(year.start !== YEAR_RANGE_DEFAULTS.start || year.end !== YEAR_RANGE_DEFAULTS.end) {
+    //         queryParams = `${queryParams}&y=${requestBody.page}`;
+    //     }
+    // };
     try {
         // Example error response from ODMB - {"Response":"False","Error":"Invalid API key!"} - Error
         let uri = encodeURI(`http://www.omdbapi.com/?${queryParams}`)
+        console.log("uri ", uri);
         response = await fetch(uri);
         response = await response.json();
         // response = RESPONSE;
@@ -56,6 +67,11 @@ app.post('/api/search', async (req, res) => {
     res.json({
         response
     });
+    // setTimeout(() => {
+    //     res.json({
+    //         response
+    //     });
+    // }, 3000)
 });
 
 app.listen(port, () => {

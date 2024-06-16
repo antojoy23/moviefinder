@@ -1,13 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import { StyledDetailsPanel, StyledDetailsPanelEmpty, StyledDetailsLoadingPanel, StyledTitleSection, StyledPlotSection, StyledRatingsSection } from './DetailsPanel.style';
 import { searchById } from '../../utils/movieApi';
-
+import MovieReelIcon from '../common/icons/MovieReelIcon';
 import BookmarkIcon from '../../assets/icons/bookmark.svg';
 
 export default function DetailsPanel({ titleId }) {
 
     const [titleDetails, setTitleDetails] = useState();
     const [loading, setLoading] = useState(false);
+
+    const resolvePoster = () => {
+        if (titleDetails["Poster"] === "N/A") {
+            return <MovieReelIcon />;
+        } else {
+            return <img src={titleDetails["Poster"]} alt={`${titleDetails["Title"]} Poster`} />
+        }
+    }
 
     const formatTitleDetails = (details) => {
         // Ratings format
@@ -56,7 +64,8 @@ export default function DetailsPanel({ titleId }) {
             <StyledDetailsPanel>
                 <StyledTitleSection>
                     <div className='details-image-container'>
-                        <img src={titleDetails["Poster"]} alt={`${titleDetails["Title"]} Poster`} />
+                        {resolvePoster()}
+
                     </div>
                     <div className='watchlist-container'>
                         <img src={BookmarkIcon} alt='Add to watchlist' />

@@ -3,17 +3,31 @@ import styled from 'styled-components';
 export const StyledTitleCard = styled.article`
     display: flex;
     align-items: center;
-    padding: 80px 30px;
+    padding: 30px 30px;
     border-bottom: 1px solid rgb(221,221,221);
     cursor: pointer;
 
-    img {
+    .poster-image-container {
         width: 50px;
         height: 50px;
-        object-fit: cover;
-        object-position: center;
         border-radius: 3px;
         margin-right: 10px;
+        flex-shrink: 0;
+        background: rgba(0, 0, 0, 0.25);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        svg {
+            color: rgba(0, 0, 0, 0.3);
+        }
+
+        .poster-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
     }
 
     .title {

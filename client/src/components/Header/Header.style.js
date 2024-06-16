@@ -15,6 +15,16 @@ export const StyledHeader = styled.div`
         display: flex;
         align-items: center;
 
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
+        input:-webkit-autofill:active{
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: white;
+            caret-color: white;
+            transition: background-color 1s ease-in-out 0s;
+        }
+
         &:focus-within {
             .search-icon-container {
                 right: 50px;
@@ -62,7 +72,70 @@ export const StyledHeader = styled.div`
     }
 
     .filter-container {
-        width: 250px;
+        width: 500px;
+        display: flex;
+
+        .title-year-slider-container {
+            width: 200px;
+            display: flex;
+            align-items: center;
+
+            .range-input {
+                border: 0;
+                width: 26px;
+                border-bottom: 1px solid transparent;
+                color: white;
+                font-size: 11px;
+                padding: 8px 0;
+                outline: 0;
+                background-color: transparent;
+                transition: border-color 150ms;
+
+                &::placeholder {
+                    color: rgb(223, 223, 223);
+                }
+
+                &:focus {
+                    border-color: white;
+                    &::placeholder {
+                        color: transparent;
+                    }
+                }
+            }
+
+            .multi-range-slider {
+                flex: 1;
+                border: none;
+                box-shadow: none;
+                margin: 0 6px;
+
+                .bar-left {
+                    box-shadow: none;
+                }
+
+                .bar-right {
+                    box-shadow: none;
+                }
+
+                .bar-inner {
+                    border: none;
+                    box-shadow: none;
+                    background-color: rgb(0, 120, 243);
+                }
+
+                .thumb {
+                    &::before {
+                        border: none;
+                        box-shadow: none;
+                        margin: -6px -12px;
+                    }
+
+                    .caption {
+                        display: none;
+                    }
+                }
+            }
+        }
 
         .title-type-label {
             color: white;
