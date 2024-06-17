@@ -5,8 +5,13 @@ import TitleListing from './components/TitleListing/TitleListing';
 import DetailsPanel from './components/DetailsPanel/DetailsPanel';
 import Header from './components/Header/Header';
 
-import { StyledMainContainer } from './App.style';
+import { StyledEmptySearchContainer, StyledMainContainer, StyledTitlesLoadingContainer } from './App.style';
 import Home from './components/Home/Home';
+import LoadingDots from './components/common/LoadingDots/LoadingDots';
+
+import SearchEmptyIcon from './assets/icons/search-empty.svg';
+import ErrorIcon from './assets/icons/error.svg';
+import { SEARCH_TYPES } from './constants/titles';
 
 function App() {
   const [titles, setTitles] = useState(null);
@@ -68,11 +73,25 @@ function App() {
     if (titleError) {
       if (titleError === "Movie not found!") {
         return (
-          <>The requested title not found!</>
+          <StyledMainContainer>
+            <StyledEmptySearchContainer>
+              <img src={SearchEmptyIcon} alt='Empty Search Icon' />
+              <h3>No <span>{SEARCH_TYPES[searchType.current]}</span> found with the search term "{searchTerm.current}"</h3>
+              <p>Sorry we could not find the {searchType.current}s matching your search. Please try again with a different search term &#128522;</p>
+            </StyledEmptySearchContainer>
+          </StyledMainContainer>
         )
       }
       return (
-        <>Error fetching titles: {titleError}</>
+        <StyledMainContainer>
+          <StyledEmptySearchContainer>
+            <img src={ErrorIcon} alt="Error Image" />
+            <h2>Oops!</h2>
+            <h3>Well, this is unexpected...</h3>
+            <p>We could not process your request at this time &#128533;</p>
+            <p>Please try again later</p>
+          </StyledEmptySearchContainer>
+        </StyledMainContainer>
       )
     }
     if (titles) {
@@ -92,10 +111,13 @@ function App() {
     } else {
       if (isLoading) {
         return (
-          <>Loading Titles</>
+          <StyledMainContainer>
+            <StyledTitlesLoadingContainer>
+              <p>Getting the <span>{SEARCH_TYPES[searchType.current]}</span> for you in a jiffy!</p>
+              <LoadingDots />
+            </StyledTitlesLoadingContainer>
+          </StyledMainContainer>
         )
-      } else {
-        return <>Enter a Movie, Series or Episode title</>
       }
     }
   }

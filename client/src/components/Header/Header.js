@@ -112,30 +112,35 @@ export default function Header({ onTitleSearch, onSearchInput, onTypeChange, onY
                 />
             </div>
             <div className='filter-container'>
-                <div className='title-year-slider-container'>
-                    <input
-                        className='range-input'
-                        type='text'
-                        value={yearRangeRef.current.start}
-                        onChange={(e) => { handleYearChangeFromInput("start", e.target.value) }}
-                        onBlur={() => validateYearRange("start")}
-                    />
-                    <MultiRangeSlider
-                        min={DEFAULT_YEAR_RANGE.start}
-                        max={DEFAULT_YEAR_RANGE.end}
-                        minValue={yearRange.start}
-                        maxValue={yearRange.end}
-                        ruler={false}
-                        label={false}
-                        onChange={handleYearChange}
-                    />
-                    <input
-                        className='range-input'
-                        type='text'
-                        value={yearRangeRef.current.end}
-                        onBlur={() => validateYearRange("end")}
-                        onChange={(e) => { handleYearChangeFromInput("end", e.target.value) }}
-                    />
+                <div className='title-year-filter'>
+                    <div className='title-year-slider-label'>
+                        YEAR
+                    </div>
+                    <div className='title-year-slider-container'>
+                        <input
+                            className='range-input'
+                            type='text'
+                            value={yearRangeRef.current.start}
+                            onChange={(e) => { handleYearChangeFromInput("start", e.target.value) }}
+                            onBlur={() => validateYearRange("start")}
+                        />
+                        <MultiRangeSlider
+                            min={DEFAULT_YEAR_RANGE.start}
+                            max={DEFAULT_YEAR_RANGE.end}
+                            minValue={yearRange.start}
+                            maxValue={yearRange.end}
+                            ruler={false}
+                            label={false}
+                            onChange={handleYearChange}
+                        />
+                        <input
+                            className='range-input'
+                            type='text'
+                            value={yearRangeRef.current.end}
+                            onBlur={() => validateYearRange("end")}
+                            onChange={(e) => { handleYearChangeFromInput("end", e.target.value) }}
+                        />
+                    </div>
                 </div>
                 <div className='title-type-group'>
                     <div className='title-type-label'>

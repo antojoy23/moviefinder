@@ -71,7 +71,7 @@ app.post('/api/search', async (req, res) => {
     //     res.json({
     //         response
     //     });
-    // }, 3000)
+    // }, 30000)
 });
 
 app.listen(port, () => {

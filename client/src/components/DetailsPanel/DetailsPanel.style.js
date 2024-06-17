@@ -13,6 +13,30 @@ export const StyledDetailsPanelEmpty = styled.main`
 
 export const StyledDetailsLoadingPanel = styled.article`
     ${CommonStyles}
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+`
+
+export const StyledDetailsErrorPanel = styled.article`
+    ${CommonStyles}
+    padding: 0 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    h2 {
+        margin-bottom: 10px;
+    }
+    p {
+        text-align: center;
+    }
+    img {
+        width: 50px;
+    }
 `
 
 export const StyledDetailsPanel = styled.article`

@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const StyledTitleCard = styled.article`
     display: flex;
@@ -6,6 +6,10 @@ export const StyledTitleCard = styled.article`
     padding: 30px 30px;
     border-bottom: 1px solid rgb(221,221,221);
     cursor: pointer;
+    ${props => props.$isSelected && css`
+        box-shadow: inset 1px 0 2px rgb(0, 0, 0, 0.02);
+        background-color: rgba(0, 0, 0, 0.1);
+    `}
 
     .poster-image-container {
         width: 50px;

@@ -74,92 +74,107 @@ export const StyledHeader = styled.div`
     .filter-container {
         width: 500px;
         display: flex;
+        gap: 20px;
 
-        .title-year-slider-container {
-            width: 200px;
-            display: flex;
-            align-items: center;
+        .title-year-filter {
+            flex: 1;
 
-            .range-input {
-                border: 0;
-                width: 26px;
-                border-bottom: 1px solid transparent;
+            .title-year-slider-label {
                 color: white;
                 font-size: 11px;
-                padding: 8px 0;
-                outline: 0;
-                background-color: transparent;
-                transition: border-color 150ms;
-
-                &::placeholder {
-                    color: rgb(223, 223, 223);
-                }
-
-                &:focus {
-                    border-color: white;
-                    &::placeholder {
-                        color: transparent;
-                    }
-                }
             }
 
-            .multi-range-slider {
+            .title-year-slider-container {
                 flex: 1;
-                border: none;
-                box-shadow: none;
-                margin: 0 6px;
-
-                .bar-left {
-                    box-shadow: none;
-                }
-
-                .bar-right {
-                    box-shadow: none;
-                }
-
-                .bar-inner {
-                    border: none;
-                    box-shadow: none;
-                    background-color: rgb(0, 120, 243);
-                }
-
-                .thumb {
-                    &::before {
-                        border: none;
-                        box-shadow: none;
-                        margin: -6px -12px;
-                    }
-
-                    .caption {
-                        display: none;
-                    }
-                }
-            }
-        }
-
-        .title-type-label {
-            color: white;
-            font-size: 12px;
-            margin-bottom: 5px;
-        }
-
-        .title-type-options {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            color: white;
-            font-size: 12px;
-
-            div {
                 display: flex;
                 align-items: center;
-                input {
-                    margin-right: 5px;
+
+                .range-input {
+                    border: 0;
+                    width: 26px;
+                    border-bottom: 1px solid transparent;
+                    color: white;
+                    font-size: 11px;
+                    padding: 4px 0;
+                    outline: 0;
+                    background-color: transparent;
+                    transition: border-color 150ms;
+
+                    &::placeholder {
+                        color: rgb(223, 223, 223);
+                    }
+
+                    &:focus {
+                        border-color: white;
+                        &::placeholder {
+                            color: transparent;
+                        }
+                    }
                 }
-                input, label {
-                    cursor: pointer;
+
+                .multi-range-slider {
+                    flex: 1;
+                    border: none;
+                    box-shadow: none;
+                    margin: 0 6px;
+                    padding: 5px 10px;
+
+                    .bar-left, .bar-right, .bar-inner {
+                        padding: 2px 0;
+                        box-shadow: none;
+                    }
+
+                    .bar-inner {
+                        border: none;
+                        height: 4px;
+                        box-shadow: none;
+                        background-color: rgb(0, 120, 243);
+                    }
+
+                    .thumb {
+                        &::before {
+                            border-color: rgb(77, 77, 77);
+                            box-shadow: none;
+                            margin: -5px -6px;
+                            width: 12px;
+                            height: 12px;
+                        }
+
+                        .caption {
+                            display: none;
+                        }
+                    }
                 }
             }
         }
+
+        .title-type-group {
+            flex: 1;
+            .title-type-label {
+                color: white;
+                font-size: 11px;
+                margin-bottom: 5px;
+            }
+    
+            .title-type-options {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                color: white;
+                font-size: 11px;
+    
+                div {
+                    display: flex;
+                    align-items: center;
+                    input {
+                        margin-right: 5px;
+                    }
+                    input, label {
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
+
     }
 `;

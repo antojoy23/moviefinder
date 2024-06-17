@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef } from 'react'
 import TitleCard from './TitleCard/TitleCard'
 
 import { StyledSection } from './TitleListing.style'
+import LoadingDots from '../common/LoadingDots/LoadingDots';
 
 export default function TitleListing({ titles, titlesCount, selectedTitle, onTitleSelect, onLoadMoreTitles, isLoading }) {
 
@@ -51,7 +52,7 @@ export default function TitleListing({ titles, titlesCount, selectedTitle, onTit
                 }
                 return <TitleCard onTitleSelect={handleTitleSelect} isSelected={selectedTitle === title["imdbID"]} key={title["imdbID"]} title={title} />
             })}
-            {isLoading && <div>Loading...</div>}
+            {isLoading && <div className='loading-container'><LoadingDots /></div>}
         </StyledSection>
     )
 }

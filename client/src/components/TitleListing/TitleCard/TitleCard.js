@@ -3,7 +3,7 @@ import { StyledTitleCard } from './TitleCard.style'
 
 import MovieReelIcon from '../../common/icons/MovieReelIcon';
 
-const TitleCard = forwardRef(({ title, onTitleSelect }, ref) => {
+const TitleCard = forwardRef(({ title, onTitleSelect, isSelected }, ref) => {
 
     const resolvePoster = () => {
         if (title["Poster"] === "N/A") {
@@ -13,7 +13,7 @@ const TitleCard = forwardRef(({ title, onTitleSelect }, ref) => {
         }
     }
     return (
-        <StyledTitleCard ref={ref} onClick={onTitleSelect} data-id={title["imdbID"]}>
+        <StyledTitleCard ref={ref} onClick={onTitleSelect} $isSelected={isSelected} data-id={title["imdbID"]}>
             <div className='poster-image-container'>
                 {resolvePoster()}
             </div>

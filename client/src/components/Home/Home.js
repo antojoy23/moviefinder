@@ -5,13 +5,7 @@ import { StyledHome, StyledHomeSection } from './Home.style';
 
 import SearchIcon from '../../assets/icons/search.svg';
 import HomeBg from '../../assets/images/home-bg.jpg';
-
-const placeHolderTextMap = {
-    "any": "Search Titles",
-    "movie": "Search Movies",
-    "series": "Search Series",
-    "episode": "Search Episodes"
-}
+import { SEARCH_TYPES } from '../../constants/titles';
 
 export default function Home({ onTitleSearch, onSearchInput, onTypeChange }) {
 
@@ -55,7 +49,7 @@ export default function Home({ onTitleSearch, onSearchInput, onTypeChange }) {
                         onKeyDown={handleTitleSearch}
                         value={searchTerm}
                         onChange={(e) => { setSearchTerm(e.target.value); onSearchInput(e.target.value) }}
-                        placeholder={placeHolderTextMap[searchType]}
+                        placeholder={`Search ${SEARCH_TYPES[searchType]}`}
                     />
                 </div>
                 <div className='title-type-group'>

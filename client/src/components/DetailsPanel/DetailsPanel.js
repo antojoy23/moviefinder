@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from 'react'
-import { StyledDetailsPanel, StyledDetailsPanelEmpty, StyledDetailsLoadingPanel, StyledTitleSection, StyledPlotSection, StyledRatingsSection } from './DetailsPanel.style';
+import { StyledDetailsPanel, StyledDetailsPanelEmpty, StyledDetailsLoadingPanel, StyledTitleSection, StyledPlotSection, StyledRatingsSection, StyledDetailsErrorPanel } from './DetailsPanel.style';
+import LoadingDots from '../common/LoadingDots/LoadingDots';
+
 import { searchById } from '../../utils/movieApi';
+
 import MovieReelIcon from '../common/icons/MovieReelIcon';
 import BookmarkIcon from '../../assets/icons/bookmark.svg';
+import ErrorIcon from '../../assets/icons/error.svg';
+
 
 export default function DetailsPanel({ titleId }) {
 
     const [titleDetails, setTitleDetails] = useState();
     const [loading, setLoading] = useState(false);
+    const [isError, setIsError] = useState(false);
 
     const resolvePoster = () => {
         if (titleDetails["Poster"] === "N/A") {
@@ -39,6 +45,7 @@ export default function DetailsPanel({ titleId }) {
     useEffect(() => {
         if (!titleId) return;
         setLoading(true);
+        setIsError(false);
         const getTitleDetails = async () => {
             try {
                 let details = await searchById({ id: titleId });
@@ -46,6 +53,7 @@ export default function DetailsPanel({ titleId }) {
                 setTitleDetails(details);
                 setLoading(false);
             } catch (ex) {
+                setIsError(true);
                 setLoading(false);
             }
         }
@@ -53,10 +61,21 @@ export default function DetailsPanel({ titleId }) {
 
     }, [titleId])
 
+    if (isError) {
+        return (<StyledDetailsErrorPanel>
+            <img src={ErrorIcon} alt="Error Image" />
+            <h2>Oops!</h2>
+            <h3>Well, this is unexpected...</h3>
+            <p>We could not process your request at this time &#128533;</p>
+            <p>Please try again later</p>
+        </StyledDetailsErrorPanel>)
+    }
+
     if (loading) {
-        return <StyledDetailsLoadingPanel>
-            Loading....
-        </StyledDetailsLoadingPanel>
+        return (<StyledDetailsLoadingPanel>
+            <p>Hang on! This shouldn't take much longer &#128522;</p>
+            <LoadingDots />
+        </StyledDetailsLoadingPanel>)
     }
 
     if (titleDetails) {
