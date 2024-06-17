@@ -11,7 +11,7 @@ import LoadingDots from './components/common/LoadingDots/LoadingDots';
 
 import SearchEmptyIcon from './assets/icons/search-empty.svg';
 import ErrorIcon from './assets/icons/error.svg';
-import { SEARCH_TYPES } from './constants/titles';
+import { DEFAULT_YEAR_RANGE, SEARCH_TYPES } from './constants/titles';
 
 function App() {
   const [titles, setTitles] = useState(null);
@@ -21,13 +21,35 @@ function App() {
 
   const searchTerm = useRef("");
   const searchType = useRef("any");
-  const yearRange = useRef();
+  const yearRange = useRef(DEFAULT_YEAR_RANGE);
   const totalTitles = useRef(0);
   const currentPage = useRef(1);
+  const completeTitleList = useRef();
+  const canLoadMoreTitles = useRef(false);
 
   const onTitleSelect = useCallback((title) => {
     setSelectedTitle(title);
   }, []);
+
+  const filterTitles = (titleList) => {
+    return titleList.filter((title) => {
+      let years;
+      if (searchType.current === "episode") {
+        years = title["Released"].split("-").map((y) => Number(y));
+        years = [years[0]];
+      } else {
+        years = title["Year"].split("–").map((y) => Number(y));
+      }
+      let isValid = false;
+      if (years.length > 1) {
+        isValid = yearRange.current.start <= years[0] && years[1] <= yearRange.current.end;
+      } else {
+        isValid = yearRange.current.start <= years[0] && years[0] <= yearRange.current.end;
+      }
+      if (selectedTitle === title["imdbID"] && !isValid) setSelectedTitle(null);
+      return isValid;
+    })
+  }
 
   const handleSearchTitle = async () => {
     try {
@@ -36,9 +58,18 @@ function App() {
       setIsLoading(true);
       setSelectedTitle(null);
       setTitleError(null);
-      const moviesData = await searchTitle({ searchTerm: searchTerm.current, searchType: searchType.current, year: yearRange });
-      totalTitles.current = Number(moviesData["totalResults"]);
-      setTitles(moviesData["Search"]);
+      const moviesData = await searchTitle({ searchTerm: searchTerm.current, searchType: searchType.current, page: currentPage.current, year: yearRange.current });
+      if (searchType.current === "episode") {
+        totalTitles.current = Number(moviesData["totalSeasons"]);
+        completeTitleList.current = moviesData["Episodes"];
+        canLoadMoreTitles.current = currentPage.current < totalTitles.current;
+      } else {
+        totalTitles.current = Number(moviesData["totalResults"]);
+        completeTitleList.current = moviesData["Search"];
+        canLoadMoreTitles.current = moviesData["Search"].length < totalTitles.current;
+      }
+      let filteredTitles = filterTitles(completeTitleList.current);
+      setTitles(filteredTitles);
       setIsLoading(false);
     } catch (ex) {
       setIsLoading(false);
@@ -50,8 +81,19 @@ function App() {
     currentPage.current++;
     setIsLoading(true);
     try {
-      const moviesData = await searchTitle({ searchTerm: searchTerm.current, searchType: searchType.current, page: currentPage.current, year: yearRange });
-      setTitles([...titles, ...moviesData["Search"]]);
+      const titleData = await searchTitle({ searchTerm: searchTerm.current, searchType: searchType.current, page: currentPage.current, year: yearRange.current });
+      let titleDataResult = titleData["Search"]
+      if (searchType.current === "episode") {
+        titleDataResult = titleData["Episodes"];
+      }
+      completeTitleList.current = [...completeTitleList.current, ...titleDataResult];
+      let filteredTitles = filterTitles(titleDataResult);
+      if (searchType.current === "episode") {
+        canLoadMoreTitles.current = currentPage.current < totalTitles.current;
+      } else {
+        canLoadMoreTitles.current = completeTitleList.current.length < totalTitles.current;
+      }
+      setTitles([...titles, ...filteredTitles]);
       setIsLoading(false);
     } catch (ex) {
       setIsLoading(false);
@@ -65,8 +107,10 @@ function App() {
     }
   }
 
-  const handleYearChange = (yearRange) => {
-    yearRange.current = yearRange;
+  const handleYearChange = (range) => {
+    yearRange.current = range;
+    let filteredTitles = filterTitles(completeTitleList.current);
+    setTitles(filteredTitles);
   }
 
   const resolveMainComponent = () => {
@@ -85,7 +129,7 @@ function App() {
       return (
         <StyledMainContainer>
           <StyledErrorContainer>
-            <img src={ErrorIcon} alt="Error Image" />
+            <img src={ErrorIcon} alt="Error" />
             <h2>Oops!</h2>
             <h3>Well, this is unexpected...</h3>
             <p>We could not process your request at this time &#128533;</p>
@@ -103,6 +147,8 @@ function App() {
             onLoadMoreTitles={handleLoadMoreTitles}
             onTitleSelect={onTitleSelect}
             selectedTitle={selectedTitle}
+            searchType={searchType.current}
+            canLoadMore={canLoadMoreTitles.current}
             isLoading={isLoading}
           />
           <DetailsPanel titleId={selectedTitle} />

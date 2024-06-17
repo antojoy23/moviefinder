@@ -1,14 +1,11 @@
 import React, { useReducer, useRef, useState } from 'react'
 import MultiRangeSlider from 'multi-range-slider-react';
 
+import { DEFAULT_YEAR_RANGE } from '../../constants/titles';
+
 import SearchIcon from '../../assets/icons/search.svg';
 
 import { StyledHeader } from './Header.style';
-
-const DEFAULT_YEAR_RANGE = {
-    start: 1872,
-    end: new Date().getFullYear()
-}
 
 export default function Header({ onTitleSearch, onSearchInput, onTypeChange, onYearRangeChange, searchTermDefault, searchTypeDefault }) {
 

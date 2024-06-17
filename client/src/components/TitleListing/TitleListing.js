@@ -3,8 +3,9 @@ import TitleCard from './TitleCard/TitleCard'
 
 import { StyledSection } from './TitleListing.style'
 import LoadingDots from '../common/LoadingDots/LoadingDots';
+import { SEARCH_TYPES } from '../../constants/titles';
 
-export default function TitleListing({ titles, titlesCount, selectedTitle, onTitleSelect, onLoadMoreTitles, isLoading }) {
+export default function TitleListing({ titles, titlesCount, canLoadMore, selectedTitle, onTitleSelect, onLoadMoreTitles, searchType, isLoading }) {
 
     const observerRef = useRef();
     const intersectionRootRef = useRef();
@@ -13,7 +14,6 @@ export default function TitleListing({ titles, titlesCount, selectedTitle, onTit
 
     // No need to re-render the callback if onTitleSelect does not change
     const handleTitleSelect = useCallback((e) => {
-        console.log("WHY AM I GETTING CALLED");
         let title = e.currentTarget.getAttribute("data-id");
         onTitleSelect && onTitleSelect(title);
     }, [onTitleSelect]);
@@ -31,7 +31,7 @@ export default function TitleListing({ titles, titlesCount, selectedTitle, onTit
     }, [titles]);
 
     useEffect(() => {
-        if (titles.length < titlesCount && observeElementRef.current) {
+        if (canLoadMore && observeElementRef.current) {
             observerRef.current = new IntersectionObserver(handleIntersectionCallback, {
                 root: intersectionRootRef.current,
                 rootMargin: "0px",
@@ -46,13 +46,18 @@ export default function TitleListing({ titles, titlesCount, selectedTitle, onTit
 
     return (
         <StyledSection ref={intersectionRootRef}>
-            {titles.map((title, idx) => {
-                if (idx === titles.length - 2) {
-                    return <TitleCard ref={observeElementRef} onTitleSelect={handleTitleSelect} isSelected={selectedTitle === title["imdbID"]} key={title["imdbID"]} title={title} />
-                }
-                return <TitleCard onTitleSelect={handleTitleSelect} isSelected={selectedTitle === title["imdbID"]} key={title["imdbID"]} title={title} />
-            })}
-            {isLoading && <div className='loading-container'><LoadingDots /></div>}
+            <div className='title-results-count'>
+                {searchType === "episode" ? "Seasons" : `${SEARCH_TYPES[searchType]}`} : {titlesCount}
+            </div>
+            <div className='title-list-container'>
+                {titles.map((title, idx) => {
+                    if (idx === titles.length - 2) {
+                        return <TitleCard ref={observeElementRef} onTitleSelect={handleTitleSelect} isSelected={selectedTitle === title["imdbID"]} key={title["imdbID"]} title={title} />
+                    }
+                    return <TitleCard onTitleSelect={handleTitleSelect} isSelected={selectedTitle === title["imdbID"]} key={title["imdbID"]} title={title} />
+                })}
+                {isLoading && <div className='loading-container'><LoadingDots /></div>}
+            </div>
         </StyledSection>
     )
 }

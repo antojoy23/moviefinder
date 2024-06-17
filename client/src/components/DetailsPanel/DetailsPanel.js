@@ -13,7 +13,6 @@ import BookmarkIcon from '../common/icons/BookmarkIcon';
 
 export default function DetailsPanel({ titleId }) {
 
-    console.log("IN WATCH LIST ", isInWatchlist(titleId));
     const [titleDetails, setTitleDetails] = useState();
     const [loading, setLoading] = useState(false);
     const [isError, setIsError] = useState(false);
@@ -57,7 +56,10 @@ export default function DetailsPanel({ titleId }) {
     }
 
     useEffect(() => {
-        if (!titleId) return;
+        if (!titleId) {
+            setTitleDetails(null);
+            return;
+        }
         setLoading(true);
         setIsError(false);
         const getTitleDetails = async () => {
@@ -78,7 +80,7 @@ export default function DetailsPanel({ titleId }) {
 
     if (isError) {
         return (<StyledDetailsErrorPanel>
-            <img src={ErrorIcon} alt="Error Image" />
+            <img src={ErrorIcon} alt="Error" />
             <h2>Oops!</h2>
             <h3>Well, this is unexpected...</h3>
             <p>We could not process your request at this time &#128533;</p>

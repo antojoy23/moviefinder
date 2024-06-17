@@ -46,14 +46,20 @@ app.get('/api/search/:id', async (req, res) => {
 app.post('/api/search', async (req, res) => {
     const requestBody = req.body;
     let response = {}
-    let queryParams = `s=${requestBody.searchTerm}&apikey=${OMDB_API_KEY}`;
+    let queryParams = `apikey=${OMDB_API_KEY}`;
+    if (requestBody.searchType && requestBody.searchType === "episode") {
+        queryParams = `${queryParams}&t=${requestBody.searchTerm}`
+    } else {
+        queryParams = `${queryParams}&s=${requestBody.searchTerm}`
+    }
     if (requestBody.searchType && OMDB_TYPES.includes(requestBody.searchType)) queryParams = `${queryParams}&type=${requestBody.searchType}`;
-    if (requestBody.page) queryParams = `${queryParams}&page=${requestBody.page}`;
-    // if (requestBody.year) {
-    //     if(year.start !== YEAR_RANGE_DEFAULTS.start || year.end !== YEAR_RANGE_DEFAULTS.end) {
-    //         queryParams = `${queryParams}&y=${requestBody.page}`;
-    //     }
-    // };
+    if (requestBody.page) {
+        if (requestBody.searchType && requestBody.searchType === "episode") {
+            queryParams = `${queryParams}&Season=${requestBody.page}`;
+        } else {
+            queryParams = `${queryParams}&page=${requestBody.page}`;
+        }
+    }
     try {
         // Example error response from ODMB - {"Response":"False","Error":"Invalid API key!"} - Error
         let uri = encodeURI(`http://www.omdbapi.com/?${queryParams}`)

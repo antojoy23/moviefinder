@@ -5,9 +5,9 @@ import { StyledLoadingDots } from './LoadingDots.style';
 export default function LoadingDots() {
     return (
         <StyledLoadingDots>
-            <div class="loading first"></div>
-            <div class="loading second"></div>
-            <div class="loading third"></div>
+            <div className="loading first"></div>
+            <div className="loading second"></div>
+            <div className="loading third"></div>
         </StyledLoadingDots>
     )
 }

@@ -6,7 +6,7 @@ import MovieReelIcon from '../../common/icons/MovieReelIcon';
 const TitleCard = forwardRef(({ title, onTitleSelect, isSelected }, ref) => {
 
     const resolvePoster = () => {
-        if (title["Poster"] === "N/A") {
+        if (!title["Poster"] || title["Poster"] === "N/A") {
             return <MovieReelIcon />
         } else {
             return <img className='poster-image' src={title["Poster"]} alt={`${title["Title"]} Poster`} />
@@ -19,7 +19,7 @@ const TitleCard = forwardRef(({ title, onTitleSelect, isSelected }, ref) => {
             </div>
             <section>
                 <p className='title'>{title["Title"]}</p>
-                <p className='year'>{title["Year"]}</p>
+                <p className='year'>{title["Year"] || title["Released"]}</p>
             </section>
         </StyledTitleCard>
     )
