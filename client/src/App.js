@@ -5,7 +5,7 @@ import TitleListing from './components/TitleListing/TitleListing';
 import DetailsPanel from './components/DetailsPanel/DetailsPanel';
 import Header from './components/Header/Header';
 
-import { StyledEmptySearchContainer, StyledMainContainer, StyledTitlesLoadingContainer } from './App.style';
+import { StyledEmptySearchContainer, StyledErrorContainer, StyledMainContainer, StyledTitlesLoadingContainer } from './App.style';
 import Home from './components/Home/Home';
 import LoadingDots from './components/common/LoadingDots/LoadingDots';
 
@@ -84,13 +84,13 @@ function App() {
       }
       return (
         <StyledMainContainer>
-          <StyledEmptySearchContainer>
+          <StyledErrorContainer>
             <img src={ErrorIcon} alt="Error Image" />
             <h2>Oops!</h2>
             <h3>Well, this is unexpected...</h3>
             <p>We could not process your request at this time &#128533;</p>
             <p>Please try again later</p>
-          </StyledEmptySearchContainer>
+          </StyledErrorContainer>
         </StyledMainContainer>
       )
     }

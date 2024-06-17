@@ -5,15 +5,19 @@ import LoadingDots from '../common/LoadingDots/LoadingDots';
 import { searchById } from '../../utils/movieApi';
 
 import MovieReelIcon from '../common/icons/MovieReelIcon';
-import BookmarkIcon from '../../assets/icons/bookmark.svg';
+// import BookmarkIcon from '../../assets/icons/bookmark.svg';
 import ErrorIcon from '../../assets/icons/error.svg';
+import { addToWatchlist, isInWatchlist, removeFromWatchlist } from '../../utils/watchlistAPI';
+import BookmarkIcon from '../common/icons/BookmarkIcon';
 
 
 export default function DetailsPanel({ titleId }) {
 
+    console.log("IN WATCH LIST ", isInWatchlist(titleId));
     const [titleDetails, setTitleDetails] = useState();
     const [loading, setLoading] = useState(false);
     const [isError, setIsError] = useState(false);
+    const [inWatchlist, setInWatchlist] = useState(isInWatchlist(titleId));
 
     const resolvePoster = () => {
         if (titleDetails["Poster"] === "N/A") {
@@ -42,6 +46,16 @@ export default function DetailsPanel({ titleId }) {
         return details;
     }
 
+    const handleWatchlistAddRemove = () => {
+        if (inWatchlist) {
+            removeFromWatchlist(titleId);
+            setInWatchlist(false);
+        } else {
+            addToWatchlist(titleId);
+            setInWatchlist(true);
+        }
+    }
+
     useEffect(() => {
         if (!titleId) return;
         setLoading(true);
@@ -51,6 +65,7 @@ export default function DetailsPanel({ titleId }) {
                 let details = await searchById({ id: titleId });
                 details = formatTitleDetails(details);
                 setTitleDetails(details);
+                setInWatchlist(isInWatchlist(titleId))
                 setLoading(false);
             } catch (ex) {
                 setIsError(true);
@@ -81,14 +96,13 @@ export default function DetailsPanel({ titleId }) {
     if (titleDetails) {
         return (
             <StyledDetailsPanel>
-                <StyledTitleSection>
+                <StyledTitleSection $inWatchlist={inWatchlist}>
                     <div className='details-image-container'>
                         {resolvePoster()}
-
                     </div>
-                    <div className='watchlist-container'>
-                        <img src={BookmarkIcon} alt='Add to watchlist' />
-                        <p>Watchlist</p>
+                    <div className='watchlist-container' onClick={handleWatchlistAddRemove}>
+                        <BookmarkIcon />
+                        <p>{inWatchlist ? "Remove from watchlist" : "Add to watchlist"}</p>
                     </div>
                     <article>
                         <h2>{titleDetails["Title"]}</h2>

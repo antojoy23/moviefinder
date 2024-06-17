@@ -21,6 +21,28 @@ export const StyledTitleCard = styled.article`
         display: flex;
         align-items: center;
         justify-content: center;
+        transition: all 300ms;
+
+        // For Laptops and small screens
+        @media (769px <= width <= 1024px) {
+            width: 50px;
+            height: 50px;
+            border-radius: 3px;
+        }
+
+        // For Desktops and large screens
+        @media (1025px <= width <= 1200px) {
+            width: 60px;
+            height: 60px;
+            border-radius: 4px;
+        }
+
+        // For Extra large screens
+        @media (width >= 1201px) {
+            width: 80px;
+            height: 80px;
+            border-radius: 5px;
+        }
 
         svg {
             color: rgba(0, 0, 0, 0.3);
@@ -29,8 +51,24 @@ export const StyledTitleCard = styled.article`
         .poster-image {
             width: 100%;
             height: 100%;
+            border-radius: 3px;
             object-fit: cover;
             object-position: center;
+
+            // For Laptops and small screens
+            @media (769px <= width <= 1024px) {
+                border-radius: 3px;
+            }
+
+            // For Desktops and large screens
+            @media (1025px <= width <= 1200px) {
+                border-radius: 4px;
+            }
+
+            // For Extra large screens
+            @media (width >= 1201px) {
+                border-radius: 5px;
+            }
         }
     }
 
@@ -39,11 +77,48 @@ export const StyledTitleCard = styled.article`
         margin-bottom: 6px;
         line-height: 18px;
         color: rgb(58, 58, 58);
+        transition: all 300ms;
+        // For Laptops and small screens
+        @media (769px <= width <= 1024px) {
+            font-size: 14px;
+            margin-bottom: 6px;
+            line-height: 18px;
+        }
+
+        // For Desktops and large screens
+        @media (1025px <= width <= 1200px) {
+            font-size: 16px;
+            margin-bottom: 6px;
+            line-height: 20px;
+        }
+
+        // For Extra large screens
+        @media (width >= 1201px) {
+            font-size: 18px;
+            margin-bottom: 8px;
+            line-height: 20px;
+        }
     }
 
     .year {
         font-size: 12px;
-        color: rgb(153,141,141);
+        color: rgb(117,117,117);
+        transition: all 300ms;
+
+        // For Laptops and small screens
+        @media (769px <= width <= 1024px) {
+            font-size: 12px;
+        }
+
+        // For Desktops and large screens
+        @media (1025px <= width <= 1200px) {
+            font-size: 14px;
+        }
+
+        // For Extra large screens
+        @media (width >= 1201px) {
+            font-size: 16px;
+        }
     }
 
 `;
