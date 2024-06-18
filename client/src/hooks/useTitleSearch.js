@@ -14,6 +14,7 @@ export default function useTitleSearch(setTitles) {
             let currentPage = page + 1;
             const titles = await searchTitle({ searchTerm, searchType, page: currentPage });
             let totalTitles, currentTitles, hasMoreTitles;
+            // Incase of "episode" type the format of response is different
             if (searchType === "episode") {
                 totalTitles = Number(titles["totalSeasons"]);
                 currentTitles = titles["Episodes"];

@@ -1,13 +1,19 @@
 import React, { useContext, useEffect, useRef } from 'react'
-import TitleCard from './TitleCard/TitleCard'
 
-import { StyledSection } from './TitleListing.style'
+import TitleCard from './TitleCard/TitleCard'
 import LoadingDots from '../common/LoadingDots/LoadingDots';
-import { SEARCH_TYPES } from '../../constants/titles';
+
+//Context
 import { SearchTermContext, SearchTypeContext } from '../../context/FilterContexts';
 import { SetTitlesListContext, TitlesListContext } from '../../context/TitlesContext';
-import useTitleSearch from '../../hooks/useTitleSearch';
 import { SelectedTitleContext, SetSelectedTitleContext } from '../../context/SelectedTitleContext';
+
+//Hooks
+import useTitleSearch from '../../hooks/useTitleSearch';
+
+import { SEARCH_TYPES } from '../../constants/titles';
+
+import { StyledSection } from './TitleListing.style'
 
 export default function TitleListing({ yearRange }) {
 
@@ -54,6 +60,7 @@ export default function TitleListing({ yearRange }) {
         }
 
         if (hasMoreTitles && observeElementRef.current) {
+            // Intersection observer for infinite loading experience :: Can be moved to custom hook
             observerRef.current = new IntersectionObserver(handleIntersectionCallback, {
                 root: intersectionRootRef.current,
                 rootMargin: "100px",
@@ -74,12 +81,26 @@ export default function TitleListing({ yearRange }) {
             </div>
             <div className='title-list-container'>
                 {filteredTitles.map((title, idx) => {
+                    // Setting the last card to be the observer element of Intersection observer
                     if (idx === filteredTitles.length - 1) {
-                        return <TitleCard ref={observeElementRef} onTitleSelect={handleTitleSelect} isSelected={selectedTitle === title["imdbID"]} key={title["imdbID"]} title={title} />
+                        return <TitleCard
+                            ref={observeElementRef}
+                            onTitleSelect={handleTitleSelect}
+                            isSelected={selectedTitle === title["imdbID"]}
+                            key={title["imdbID"]}
+                            title={title} />
                     }
-                    return <TitleCard onTitleSelect={handleTitleSelect} isSelected={selectedTitle === title["imdbID"]} key={title["imdbID"]} title={title} />
+                    return <TitleCard
+                        onTitleSelect={handleTitleSelect}
+                        isSelected={selectedTitle === title["imdbID"]}
+                        key={title["imdbID"]}
+                        title={title} />
                 })}
-                {isLoading && <div className='loading-container'><LoadingDots /></div>}
+                {isLoading && (
+                    <div className='loading-container'>
+                        <LoadingDots />
+                    </div>
+                )}
             </div>
         </StyledSection>
     )

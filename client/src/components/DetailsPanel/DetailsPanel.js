@@ -1,19 +1,34 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { StyledDetailsPanel, StyledDetailsPanelEmpty, StyledDetailsLoadingPanel, StyledTitleSection, StyledPlotSection, StyledRatingsSection, StyledDetailsErrorPanel } from './DetailsPanel.style';
-import LoadingDots from '../common/LoadingDots/LoadingDots';
 
+import LoadingDots from '../common/LoadingDots/LoadingDots';
 import MovieReelIcon from '../common/icons/MovieReelIcon';
-import ErrorIcon from '../../assets/icons/error.svg';
-import { addToWatchlist, isInWatchlist, removeFromWatchlist } from '../../utils/watchlistAPI';
 import BookmarkIcon from '../common/icons/BookmarkIcon';
-import { SelectedTitleContext } from '../../context/SelectedTitleContext';
+
+//Hooks
 import { useTitleDetails } from '../../hooks/useTitleDetails';
 
+//Context
+import { SelectedTitleContext } from '../../context/SelectedTitleContext';
+
+import { addToWatchlist, isInWatchlist, removeFromWatchlist } from '../../utils/watchlistAPI';
+
+import ErrorIcon from '../../assets/icons/error.svg';
+
+import {
+    StyledDetailsPanel,
+    StyledDetailsPanelEmpty,
+    StyledDetailsLoadingPanel,
+    StyledTitleSection,
+    StyledPlotSection,
+    StyledRatingsSection,
+    StyledDetailsErrorPanel
+} from './DetailsPanel.style';
 
 export default function DetailsPanel() {
 
 
     const selectedTitle = useContext(SelectedTitleContext);
+
     const [inWatchlist, setInWatchlist] = useState(() => isInWatchlist(selectedTitle));
 
     const { titleDetails, isLoading, error } = useTitleDetails(selectedTitle);

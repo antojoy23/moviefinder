@@ -3,6 +3,7 @@ import React from 'react'
 import LoadingDots from './components/common/LoadingDots/LoadingDots'
 
 import { SEARCH_TYPES } from './constants/titles'
+
 import { StyledSearchLoading } from './SearchLoading.style'
 
 export default function SearchLoading({ searchType }) {

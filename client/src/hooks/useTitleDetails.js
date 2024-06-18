@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
+
 import { searchById } from '../utils/movieApi';
 
 const formatTitleDetails = (details) => {
     // Ratings format
+    // Sometimes the ratings provided by API will not have a value in which case we will need to populate with defaults
     let ratingOrg = [{ "Source": "Internet Movie Database", "Value": "N/A" }, { "Source": "Rotten Tomatoes", "Value": "N/A" }, { "Source": "Metacritic", "Value": "N/A" }];
     let ratingsObj = {};
     details["Ratings"].forEach((rating) => {

@@ -8,6 +8,7 @@ const withBgStyle = css`
 export const StyledLandingPage = styled.main`
     background-image: none;
     background-color: rgba(0, 0, 0, 1);
+    /* When the background image has been loaded add the styles */
     ${props => props.$isImageLoaded && withBgStyle}
     height: 100vh;
     background-blend-mode: overlay;
@@ -36,7 +37,7 @@ export const StyledLandingSection = styled.section`
         position: relative;
         border: 1px solid white;
         border-radius: 18px;
-
+        /* Handling Input field autofill bg color */
         input:-webkit-autofill,
         input:-webkit-autofill:hover,
         input:-webkit-autofill:focus,
@@ -44,7 +45,7 @@ export const StyledLandingSection = styled.section`
             -webkit-background-clip: text;
             -webkit-text-fill-color: white;
             caret-color: white;
-            transition: background-color 1s ease-in-out 0s;
+            transition: background-color 1s ease-in-out;
         }
         .search-icon-container {
             display: flex;

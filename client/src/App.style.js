@@ -1,5 +1,9 @@
 import styled from "styled-components";
 
+export const StyledApp = styled.div`
+    height: 100vh;
+`;
+
 export const StyledMainContainer = styled.div`
     display: flex;
     height: calc(100vh - 80px);

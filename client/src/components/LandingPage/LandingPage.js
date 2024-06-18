@@ -1,12 +1,17 @@
 import React, { useContext } from 'react';
+
+//Context
+import { SearchTermContext, SearchTypeContext, SetSearchTermContext, SetSearchTypeContext } from '../../context/FilterContexts';
+
+//Hooks
 import useLazyLoadImage from '../../hooks/useLazyLoadImage';
 
 import { StyledLandingPage, StyledLandingSection } from './LandingPage.style';
 
 import SearchIcon from '../../assets/icons/search.svg';
 import LandingPageBg from '../../assets/images/landing-page-bg.jpg';
+
 import { SEARCH_TYPES } from '../../constants/titles';
-import { SearchTermContext, SearchTypeContext, SetSearchTermContext, SetSearchTypeContext } from '../../context/FilterContexts';
 
 export default function LandingPage({ onTitleSearch, onTypeChange }) {
 
@@ -55,6 +60,7 @@ export default function LandingPage({ onTitleSearch, onTypeChange }) {
                         placeholder={`Search ${SEARCH_TYPES[searchType]}`}
                     />
                 </div>
+                {/* Can be moved to a radio group component and resued in Header component along with the search input */}
                 <div className='title-type-group'>
                     <div className='title-type-options'>
                         <div>

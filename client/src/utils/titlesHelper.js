@@ -6,11 +6,12 @@ export const filterTitles = (titleList, searchType, yearRange, selectedTitle) =>
             years = title["Released"].split("-").map((y) => Number(y));
             years = [years[0]];
         } else {
+            // The split character here is of unicode U+2013
             years = title["Year"].split("–").map((y) => Number(y));
         }
         let isValid = false;
         if (years.length > 1) {
-            // Empty / Currently ongoing
+            // Empty / Ongoing series or movie
             if (years[1] === 0) {
                 isValid = years[0] <= yearRange.end;
             } else {

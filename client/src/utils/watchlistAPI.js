@@ -1,3 +1,5 @@
+//Helper file for localstorage apis
+
 const KEY_NAME = "movieFinderWatchlist";
 
 const setLocalStaorage = (val) => {

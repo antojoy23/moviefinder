@@ -1,10 +1,11 @@
 import React from 'react'
 
-import { StyledEmptySearch } from './EmptySearch.style'
-
 import { SEARCH_TYPES } from './constants/titles'
 
 import SearchEmptyIcon from './assets/icons/search-empty.svg';
+
+import { StyledEmptySearch } from './EmptySearch.style'
+
 
 export default function EmptySearch({ searchType, searchTerm }) {
     return (
