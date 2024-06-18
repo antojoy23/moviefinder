@@ -63,7 +63,6 @@ app.post('/api/search', async (req, res) => {
     try {
         // Example error response from ODMB - {"Response":"False","Error":"Invalid API key!"} - Error
         let uri = encodeURI(`http://www.omdbapi.com/?${queryParams}`)
-        console.log("uri ", uri);
         response = await fetch(uri);
         response = await response.json();
         // response = RESPONSE;
