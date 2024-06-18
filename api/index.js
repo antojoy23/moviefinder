@@ -2,7 +2,7 @@ import express from 'express';
 import fetch from 'node-fetch';
 import cors from 'cors';
 import { configDotenv } from 'dotenv';
-import { OMDB_TYPES, YEAR_RANGE_DEFAULTS } from './omdbConstants.mjs';
+import { OMDB_TYPES } from './omdbConstants.mjs';
 // import { RESPONSE, SINGLE_RESPONSE } from './test/testData.mjs';
 
 const app = express();
