@@ -1,4 +1,4 @@
-import React, { useReducer, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import MultiRangeSlider from 'multi-range-slider-react';
 
 import { DEFAULT_YEAR_RANGE } from '../../constants/titles';
@@ -12,11 +12,9 @@ export default function Header({ onTitleSearch, onSearchInput, onTypeChange, onY
     const [searchTerm, setSearchTerm] = useState(searchTermDefault);
     const [searchType, setSearchType] = useState(searchTypeDefault);
     const [yearRange, setYearRange] = useState(DEFAULT_YEAR_RANGE);
+    // Maintaining another year range since we will need to validate if the input year is valid before passing on to the multirange input
+    const [inputYearRange, setInputYearRange] = useState(DEFAULT_YEAR_RANGE);
 
-    const [_, forceUpdate] = useReducer((x) => x + 1, 0);
-
-    // Move the ref to state since render is needed (using forceupdate)
-    const yearRangeRef = useRef(DEFAULT_YEAR_RANGE);
     const searchInputRef = useRef();
 
     const handleTitleSearch = async (e) => {
@@ -38,10 +36,10 @@ export default function Header({ onTitleSearch, onSearchInput, onTypeChange, onY
     }
 
     const handleYearChange = (e) => {
-        yearRangeRef.current = {
+        setInputYearRange({
             start: e.minValue,
             end: e.maxValue
-        }
+        })
         setYearRange({
             start: e.minValue,
             end: e.maxValue
@@ -50,22 +48,26 @@ export default function Header({ onTitleSearch, onSearchInput, onTypeChange, onY
     }
 
     const validateYearRange = (type) => {
-        if (type === "start" && (yearRangeRef.current.start < DEFAULT_YEAR_RANGE.start || yearRangeRef.current.start > yearRangeRef.current.end)) {
-            yearRangeRef.current.start = yearRange.start;
-            forceUpdate();
+        if (type === "start" && (inputYearRange.start < DEFAULT_YEAR_RANGE.start || inputYearRange.start > inputYearRange.end)) {
+            setInputYearRange({
+                start: yearRange.start,
+                end: inputYearRange.end
+            });
             return;
         }
-        if (type === "end" && (yearRangeRef.current.end < yearRangeRef.current.start || yearRangeRef.current.end > DEFAULT_YEAR_RANGE.end)) {
-            yearRangeRef.current.end = yearRange.end;
-            forceUpdate();
+        if (type === "end" && (inputYearRange.end < inputYearRange.start || inputYearRange.end > DEFAULT_YEAR_RANGE.end)) {
+            setInputYearRange({
+                start: inputYearRange.start,
+                end: yearRange.end
+            });
             return;
         }
 
         setYearRange({
-            start: yearRangeRef.current.start,
-            end: yearRangeRef.current.end
+            start: inputYearRange.start,
+            end: inputYearRange.end
         });
-        yearChangeCallback(yearRangeRef.current.start, yearRangeRef.current.end);
+        yearChangeCallback(inputYearRange.start, inputYearRange.end);
 
     }
 
@@ -78,11 +80,10 @@ export default function Header({ onTitleSearch, onSearchInput, onTypeChange, onY
         } else {
             end = Number(val);
         }
-        yearRangeRef.current = {
+        setInputYearRange({
             start,
             end
-        }
-        forceUpdate();
+        });
     }
 
     const handleTypeChange = (e) => {
@@ -117,7 +118,7 @@ export default function Header({ onTitleSearch, onSearchInput, onTypeChange, onY
                         <input
                             className='range-input'
                             type='text'
-                            value={yearRangeRef.current.start}
+                            value={inputYearRange.start}
                             onChange={(e) => { handleYearChangeFromInput("start", e.target.value) }}
                             onBlur={() => validateYearRange("start")}
                         />
@@ -133,7 +134,7 @@ export default function Header({ onTitleSearch, onSearchInput, onTypeChange, onY
                         <input
                             className='range-input'
                             type='text'
-                            value={yearRangeRef.current.end}
+                            value={inputYearRange.end}
                             onBlur={() => validateYearRange("end")}
                             onChange={(e) => { handleYearChangeFromInput("end", e.target.value) }}
                         />
