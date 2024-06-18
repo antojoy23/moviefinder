@@ -1,9 +1,8 @@
-export const searchTitle = ({ searchTerm, year, searchType, page }) => {
+export const searchTitle = ({ searchTerm, searchType, page }) => {
     // let controller = new AbortController();
     // let signal = controller.signal;
     const body = {
         searchTerm,
-        year,
         searchType,
         page
     }

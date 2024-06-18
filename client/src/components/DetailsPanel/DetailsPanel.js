@@ -1,22 +1,22 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { StyledDetailsPanel, StyledDetailsPanelEmpty, StyledDetailsLoadingPanel, StyledTitleSection, StyledPlotSection, StyledRatingsSection, StyledDetailsErrorPanel } from './DetailsPanel.style';
 import LoadingDots from '../common/LoadingDots/LoadingDots';
 
-import { searchById } from '../../utils/movieApi';
-
 import MovieReelIcon from '../common/icons/MovieReelIcon';
-// import BookmarkIcon from '../../assets/icons/bookmark.svg';
 import ErrorIcon from '../../assets/icons/error.svg';
 import { addToWatchlist, isInWatchlist, removeFromWatchlist } from '../../utils/watchlistAPI';
 import BookmarkIcon from '../common/icons/BookmarkIcon';
+import { SelectedTitleContext } from '../../context/SelectedTitleContext';
+import { useTitleDetails } from '../../hooks/useTitleDetails';
 
 
-export default function DetailsPanel({ titleId }) {
+export default function DetailsPanel() {
 
-    const [titleDetails, setTitleDetails] = useState();
-    const [loading, setLoading] = useState(false);
-    const [isError, setIsError] = useState(false);
-    const [inWatchlist, setInWatchlist] = useState(isInWatchlist(titleId));
+
+    const selectedTitle = useContext(SelectedTitleContext);
+    const [inWatchlist, setInWatchlist] = useState(() => isInWatchlist(selectedTitle));
+
+    const { titleDetails, isLoading, error } = useTitleDetails(selectedTitle);
 
     const resolvePoster = () => {
         if (titleDetails["Poster"] === "N/A") {
@@ -26,59 +26,21 @@ export default function DetailsPanel({ titleId }) {
         }
     }
 
-    const formatTitleDetails = (details) => {
-        // Ratings format
-        let ratingOrg = [{ "Source": "Internet Movie Database", "Value": "N/A" }, { "Source": "Rotten Tomatoes", "Value": "N/A" }, { "Source": "Metacritic", "Value": "N/A" }];
-        let ratingsObj = {};
-        details["Ratings"].forEach((rating) => {
-            ratingsObj[rating["Source"]] = rating["Value"];
-        })
-        let updatedRatings = ratingOrg.map((rating) => {
-            if (Object.hasOwn(ratingsObj, rating["Source"])) {
-                rating["Value"] = ratingsObj[rating["Source"]];
-                return rating;
-            } else {
-                return rating;
-            }
-        })
-        details["Ratings"] = updatedRatings;
-        return details;
-    }
-
     const handleWatchlistAddRemove = () => {
         if (inWatchlist) {
-            removeFromWatchlist(titleId);
+            removeFromWatchlist(selectedTitle);
             setInWatchlist(false);
         } else {
-            addToWatchlist(titleId);
+            addToWatchlist(selectedTitle);
             setInWatchlist(true);
         }
     }
 
     useEffect(() => {
-        if (!titleId) {
-            setTitleDetails(null);
-            return;
-        }
-        setLoading(true);
-        setIsError(false);
-        const getTitleDetails = async () => {
-            try {
-                let details = await searchById({ id: titleId });
-                details = formatTitleDetails(details);
-                setTitleDetails(details);
-                setInWatchlist(isInWatchlist(titleId))
-                setLoading(false);
-            } catch (ex) {
-                setIsError(true);
-                setLoading(false);
-            }
-        }
-        getTitleDetails();
+        selectedTitle && setInWatchlist(isInWatchlist(selectedTitle))
+    }, [selectedTitle])
 
-    }, [titleId])
-
-    if (isError) {
+    if (error) {
         return (<StyledDetailsErrorPanel>
             <img src={ErrorIcon} alt="Error" />
             <h2>Oops!</h2>
@@ -88,7 +50,7 @@ export default function DetailsPanel({ titleId }) {
         </StyledDetailsErrorPanel>)
     }
 
-    if (loading) {
+    if (isLoading) {
         return (<StyledDetailsLoadingPanel>
             <p>Hang on! This shouldn't take much longer &#128522;</p>
             <LoadingDots />

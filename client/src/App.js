@@ -1,189 +1,107 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef } from 'react';
 
-import { searchTitle } from './utils/movieApi';
-import TitleListing from './components/TitleListing/TitleListing';
-import DetailsPanel from './components/DetailsPanel/DetailsPanel';
 import Header from './components/Header/Header';
 
-import { StyledEmptySearchContainer, StyledErrorContainer, StyledMainContainer, StyledTitlesLoadingContainer } from './App.style';
-import Home from './components/Home/Home';
-import LoadingDots from './components/common/LoadingDots/LoadingDots';
+import { StyledMainContainer } from './App.style';
+import LandingPage from './components/LandingPage/LandingPage';
 
-import SearchEmptyIcon from './assets/icons/search-empty.svg';
-import ErrorIcon from './assets/icons/error.svg';
-import { DEFAULT_YEAR_RANGE, SEARCH_TYPES } from './constants/titles';
+import { DEFAULT_YEAR_RANGE } from './constants/titles';
+import EmptySearch from './EmptySearch';
+import SearchError from './SearchError';
+import SearchLoading from './SearchLoading';
+import Home from './components/Home/Home';
+import { SearchTermContext, SearchTypeContext, SetSearchTermContext, SetSearchTypeContext } from './context/FilterContexts';
+import { SetTitlesListContext, TitlesListContext } from './context/TitlesContext';
+import useTitleSearch from './hooks/useTitleSearch';
+import { GetTitlesContext } from './context/GetTitlesContext';
+import { filterTitles } from './utils/titlesHelper';
+import { SelectedTitleContext, SetSelectedTitleContext } from './context/SelectedTitleContext';
 
 function App() {
-  const [titles, setTitles] = useState(null);
-  const [selectedTitle, setSelectedTitle] = useState();
-  const [isLoading, setIsLoading] = useState(false);
-  const [titleError, setTitleError] = useState();
+  const [titlesData, setTitlesData] = useState({});
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchType, setSearchType] = useState("any");
+  const [selectedTitle, setSelectedTitle] = useState(null);
 
-  const searchTerm = useRef("");
-  const searchType = useRef("any");
+  const { getTitles, isLoading: searchLoading, error: searchError } = useTitleSearch(setTitlesData);
+  const { filteredTitles, currentPage, unfiltredTitles, totalTitles, hasMoreTitles } = titlesData;
+
   const yearRange = useRef(DEFAULT_YEAR_RANGE);
-  const totalTitles = useRef(0);
-  const currentPage = useRef(1);
-  const completeTitleList = useRef();
-  const canLoadMoreTitles = useRef(false);
 
-  const onTitleSelect = useCallback((title) => {
-    setSelectedTitle(title);
-  }, []);
-
-  const filterTitles = (titleList) => {
-    return titleList.filter((title) => {
-      let years;
-      if (searchType.current === "episode") {
-        years = title["Released"].split("-").map((y) => Number(y));
-        years = [years[0]];
-      } else {
-        years = title["Year"].split("–").map((y) => Number(y));
-      }
-      let isValid = false;
-      if (years.length > 1) {
-        isValid = yearRange.current.start <= years[0] && years[1] <= yearRange.current.end;
-      } else {
-        isValid = yearRange.current.start <= years[0] && years[0] <= yearRange.current.end;
-      }
-      if (selectedTitle === title["imdbID"] && !isValid) setSelectedTitle(null);
-      return isValid;
-    })
-  }
-
-  const handleSearchTitle = async () => {
-    try {
-      currentPage.current = 1;
-      setTitles(null);
-      setIsLoading(true);
-      setSelectedTitle(null);
-      setTitleError(null);
-      const moviesData = await searchTitle({ searchTerm: searchTerm.current, searchType: searchType.current, page: currentPage.current, year: yearRange.current });
-      if (searchType.current === "episode") {
-        totalTitles.current = Number(moviesData["totalSeasons"]);
-        completeTitleList.current = moviesData["Episodes"];
-        canLoadMoreTitles.current = currentPage.current < totalTitles.current;
-      } else {
-        totalTitles.current = Number(moviesData["totalResults"]);
-        completeTitleList.current = moviesData["Search"];
-        canLoadMoreTitles.current = moviesData["Search"].length < totalTitles.current;
-      }
-      let filteredTitles = filterTitles(completeTitleList.current);
-      setTitles(filteredTitles);
-      setIsLoading(false);
-    } catch (ex) {
-      setIsLoading(false);
-      setTitleError(ex["Error"]);
-    }
-  };
-
-  const handleLoadMoreTitles = async () => {
-    currentPage.current++;
-    setIsLoading(true);
-    try {
-      const titleData = await searchTitle({ searchTerm: searchTerm.current, searchType: searchType.current, page: currentPage.current, year: yearRange.current });
-      let titleDataResult = titleData["Search"]
-      if (searchType.current === "episode") {
-        titleDataResult = titleData["Episodes"];
-      }
-      completeTitleList.current = [...completeTitleList.current, ...titleDataResult];
-      let filteredTitles = filterTitles(titleDataResult);
-      if (searchType.current === "episode") {
-        canLoadMoreTitles.current = currentPage.current < totalTitles.current;
-      } else {
-        canLoadMoreTitles.current = completeTitleList.current.length < totalTitles.current;
-      }
-      setTitles([...titles, ...filteredTitles]);
-      setIsLoading(false);
-    } catch (ex) {
-      setIsLoading(false);
-    }
+  const handleSearchTitle = async (term = searchTerm, type = searchType) => {
+    setSelectedTitle(null);
+    getTitles({ searchTerm: term, searchType: type, page: 0, yearRange: yearRange.current, unfiltredTitles: [], filteredTitles: [] });
   };
 
   const handleTypeChange = (val) => {
-    searchType.current = val;
-    if (searchTerm.current && searchTerm.current.length > 0) {
-      handleSearchTitle();
+    setSearchType(val);
+    if (searchTerm && searchTerm.length > 0) {
+      handleSearchTitle(searchTerm, val);
     }
   }
 
   const handleYearChange = (range) => {
     yearRange.current = range;
-    let filteredTitles = filterTitles(completeTitleList.current);
-    setTitles(filteredTitles);
+    let [filteredData, isSelectedTitleValid] = filterTitles(unfiltredTitles, searchType, yearRange.current, selectedTitle);
+    if (!isSelectedTitleValid) setSelectedTitle(null);
+    setTitlesData((data) => Object.assign({}, data, { filteredTitles: filteredData }));
   }
 
   const resolveMainComponent = () => {
-    if (titleError) {
-      if (titleError === "Movie not found!") {
+    if (searchError) {
+      if (searchError === "Movie not found!") {
         return (
           <StyledMainContainer>
-            <StyledEmptySearchContainer>
-              <img src={SearchEmptyIcon} alt='Empty Search Icon' />
-              <h3>No <span>{SEARCH_TYPES[searchType.current]}</span> found with the search term "{searchTerm.current}"</h3>
-              <p>Sorry we could not find the {searchType.current}s matching your search. Please try again with a different search term &#128522;</p>
-            </StyledEmptySearchContainer>
+            <EmptySearch searchTerm={searchTerm} searchType={searchType} />
           </StyledMainContainer>
         )
       }
       return (
         <StyledMainContainer>
-          <StyledErrorContainer>
-            <img src={ErrorIcon} alt="Error" />
-            <h2>Oops!</h2>
-            <h3>Well, this is unexpected...</h3>
-            <p>We could not process your request at this time &#128533;</p>
-            <p>Please try again later</p>
-          </StyledErrorContainer>
+          <SearchError />
         </StyledMainContainer>
       )
     }
-    if (titles) {
+    if (searchLoading) {
       return (
         <StyledMainContainer>
-          <TitleListing
-            titles={titles}
-            titlesCount={totalTitles.current}
-            onLoadMoreTitles={handleLoadMoreTitles}
-            onTitleSelect={onTitleSelect}
-            selectedTitle={selectedTitle}
-            searchType={searchType.current}
-            canLoadMore={canLoadMoreTitles.current}
-            isLoading={isLoading}
-          />
-          <DetailsPanel titleId={selectedTitle} />
+          <SearchLoading searchType={searchType} />
         </StyledMainContainer>
       )
-    } else {
-      if (isLoading) {
-        return (
-          <StyledMainContainer>
-            <StyledTitlesLoadingContainer>
-              <p>Getting the <span>{SEARCH_TYPES[searchType.current]}</span> for you in a jiffy!</p>
-              <LoadingDots />
-            </StyledTitlesLoadingContainer>
-          </StyledMainContainer>
-        )
-      }
+    }
+    if (filteredTitles) {
+      return (
+        <StyledMainContainer>
+          <Home
+            pageNumber={currentPage.current}
+            titles={filteredTitles}
+            titlesCount={totalTitles}
+            originalTitleList={unfiltredTitles}
+            canLoadMore={hasMoreTitles}
+            isLoading={searchLoading}
+            yearRange={yearRange.current}
+          />
+        </StyledMainContainer>
+      )
     }
   }
 
   const resolvePage = () => {
     //Initial page load
-    if (!titleError && !titles && !isLoading) {
-      return <Home
+    if (!searchError && !filteredTitles && !searchLoading) {
+      return <LandingPage
         onTitleSearch={handleSearchTitle}
         onTypeChange={handleTypeChange}
-        onSearchInput={(val) => searchTerm.current = val}
+        onSearchInput={(val) => setSearchTerm(val)}
       />
     } else {
       return (
         <>
           <Header
             onTitleSearch={handleSearchTitle}
-            searchTermDefault={searchTerm.current}
-            searchTypeDefault={searchType.current}
-            onSearchInput={(val) => searchTerm.current = val}
+            searchTermDefault={searchTerm}
+            searchTypeDefault={searchType}
+            onSearchInput={(val) => setSearchTerm(val)}
             onTypeChange={handleTypeChange}
             onYearRangeChange={handleYearChange}
           />
@@ -195,9 +113,27 @@ function App() {
 
   return (
     <div style={{ height: "100vh" }}>
-      {
-        resolvePage()
-      }
+      <SearchTermContext.Provider value={searchTerm}>
+        <SetSearchTermContext.Provider value={setSearchTerm}>
+          <SearchTypeContext.Provider value={searchType}>
+            <SetSearchTypeContext.Provider value={setSearchType}>
+              <TitlesListContext.Provider value={titlesData}>
+                <SetTitlesListContext.Provider value={setTitlesData}>
+                  <GetTitlesContext.Provider value={getTitles}>
+                    <SelectedTitleContext.Provider value={selectedTitle}>
+                      <SetSelectedTitleContext.Provider value={setSelectedTitle}>
+                        {
+                          resolvePage()
+                        }
+                      </SetSelectedTitleContext.Provider>
+                    </SelectedTitleContext.Provider>
+                  </GetTitlesContext.Provider>
+                </SetTitlesListContext.Provider>
+              </TitlesListContext.Provider>
+            </SetSearchTypeContext.Provider>
+          </SearchTypeContext.Provider>
+        </SetSearchTermContext.Provider>
+      </SearchTermContext.Provider>
     </div>
   );
 }
