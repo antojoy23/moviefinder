@@ -1,3 +1,5 @@
+const apiEndpoint = process.env.REACT_APP_API_ENDPOINT || "";
+
 export const searchTitle = ({ searchTerm, searchType, page }) => {
     // let controller = new AbortController();
     // let signal = controller.signal;
@@ -9,7 +11,7 @@ export const searchTitle = ({ searchTerm, searchType, page }) => {
 
     return new Promise(async (resolve, reject) => {
         try {
-            const result = await fetch('http://localhost:9000/api/search', {
+            const result = await fetch(`${apiEndpoint}/api/search`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -40,7 +42,7 @@ export const searchById = ({ id }) => {
 
     return new Promise(async (resolve, reject) => {
         try {
-            const result = await fetch(`http://localhost:9000/api/search/${id}`, {
+            const result = await fetch(`${apiEndpoint}/api/search/${id}`, {
                 method: "GET",
                 headers: {
                     "Accept": "application/json"
