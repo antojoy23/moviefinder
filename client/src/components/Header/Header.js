@@ -1,12 +1,11 @@
-import React, { useRef, useState } from 'react'
-import MultiRangeSlider from 'multi-range-slider-react';
+import React, { useRef, useState } from 'react';
 
-import { DEFAULT_YEAR_RANGE } from '../../constants/titles';
-
-import SearchIcon from '../../assets/icons/search.svg';
+import { DEFAULT_YEAR_RANGE, SEARCH_TYPES } from '../../constants/titles';
 
 import { StyledHeader } from './Header.style';
-import TypeSelector, { FOR_COMPONENT } from '../common/TypeSelector/TypeSelector';
+import TypeSelector, { RADIO_COMPONENT_TYPE } from '../common/TypeSelector/TypeSelector';
+import SearchInput, { SEARCH_COMPONENT_TYPE } from '../common/SearchInput/SearchInput';
+import MultiRangeSelector from '../common/MultiRangeSelector/MultiRangeSelector';
 
 export default function Header({ onTitleSearch, onSearchInput, onTypeChange, onYearRangeChange, searchTermDefault, searchTypeDefault }) {
 
@@ -92,56 +91,37 @@ export default function Header({ onTitleSearch, onSearchInput, onTypeChange, onY
         onTypeChange(e.target.value);
     }
 
+    const handleTitleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
+        onSearchInput(e.target.value)
+    }
+
     return (
         <StyledHeader>
-            <div className='title-search-bar'>
-                <div className='search-icon-container' onMouseDownCapture={handleTitleSearch}>
-                    <img
-                        src={SearchIcon}
-                        alt='Search Icon'
-                    />
-                </div>
-                <input
-                    ref={searchInputRef}
-                    type='text'
-                    onKeyDown={handleTitleSearch}
-                    value={searchTerm}
-                    onChange={(e) => { setSearchTerm(e.target.value); onSearchInput(e.target.value) }}
-                    placeholder='Search Title'
-                />
-            </div>
+            <SearchInput
+                searchTerm={searchTerm}
+                forComponent={SEARCH_COMPONENT_TYPE.HEADER}
+                placeholder={`Search ${SEARCH_TYPES[searchType]}`}
+                onSearch={handleTitleSearch}
+                onChange={handleTitleSearchChange}
+                ref={searchInputRef}
+            />
             <div className='filter-container'>
-                <div className='title-year-filter'>
-                    <div className='title-year-slider-label'>
-                        YEAR
-                    </div>
-                    <div className='title-year-slider-container'>
-                        <input
-                            className='range-input'
-                            type='text'
-                            value={inputYearRange.start}
-                            onChange={(e) => { handleYearChangeFromInput("start", e.target.value) }}
-                            onBlur={() => validateYearRange("start")}
-                        />
-                        <MultiRangeSlider
-                            min={DEFAULT_YEAR_RANGE.start}
-                            max={DEFAULT_YEAR_RANGE.end}
-                            minValue={yearRange.start}
-                            maxValue={yearRange.end}
-                            ruler={false}
-                            label={false}
-                            onChange={handleYearChange}
-                        />
-                        <input
-                            className='range-input'
-                            type='text'
-                            value={inputYearRange.end}
-                            onBlur={() => validateYearRange("end")}
-                            onChange={(e) => { handleYearChangeFromInput("end", e.target.value) }}
-                        />
-                    </div>
-                </div>
-                <TypeSelector onChange={handleTypeChange} searchType={searchType} forComponent={FOR_COMPONENT.HEADER} />
+                <MultiRangeSelector
+                    label={"YEAR"}
+                    minInputValue={inputYearRange.start}
+                    maxInputValue={inputYearRange.end}
+                    onMinInputBlur={() => validateYearRange("start")}
+                    onMinInputChange={(e) => handleYearChangeFromInput("start", e.target.value)}
+                    onMaxInputBlur={() => validateYearRange("end")}
+                    onMaxInputChange={(e) => handleYearChangeFromInput("end", e.target.value)}
+                    minValue={yearRange.start}
+                    maxValue={yearRange.end}
+                    onRangeChange={handleYearChange}
+                    defaultMin={DEFAULT_YEAR_RANGE.start}
+                    defaultMax={DEFAULT_YEAR_RANGE.end}
+                />
+                <TypeSelector onChange={handleTypeChange} searchType={searchType} forComponent={RADIO_COMPONENT_TYPE.HEADER} />
             </div>
         </StyledHeader>
     )

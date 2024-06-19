@@ -2,7 +2,7 @@ import React from 'react'
 
 import { StyledTypeSelector } from './TypeSelector.style'
 
-export const FOR_COMPONENT = {
+export const RADIO_COMPONENT_TYPE = {
     LANDING: 1, //Default
     HEADER: 2
 }
@@ -24,7 +24,7 @@ const RadioInput = ({ id, name, onChange, value, checked, label }) => {
     )
 }
 
-export default function TypeSelector({ forComponent = FOR_COMPONENT.LANDING, onChange, searchType, groupName = "search-type", showLabel = true }) {
+export default function TypeSelector({ forComponent = RADIO_COMPONENT_TYPE.LANDING, onChange, searchType, groupName = "search-type", showLabel = true }) {
     return (
         <StyledTypeSelector $for={forComponent}>
             {/* If showLabel then render the label component. True by default */}

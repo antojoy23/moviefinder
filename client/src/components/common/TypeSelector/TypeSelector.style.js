@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
 
-import { FOR_COMPONENT } from "./TypeSelector";
+import { RADIO_COMPONENT_TYPE } from "./TypeSelector";
 
 const headerCss = css`
     flex: 1;
@@ -51,7 +51,7 @@ const headerCss = css`
             font-size: 16px;
             gap: 10px;
         }
-        
+
         div {
             input {
                 margin-right: 3px;
@@ -100,15 +100,6 @@ const landingPageCss = css`
 
 export const StyledTypeSelector = styled.div`
     color: white;
-    ${props => {
-        if (props.$for === FOR_COMPONENT.HEADER) {
-            //If for Header load the header css
-            return headerCss;
-        } else {
-            //else load the landingpage css (default)
-            return landingPageCss;
-        }
-    }}
     .title-type-options {
         div {
             display: flex;
@@ -118,4 +109,14 @@ export const StyledTypeSelector = styled.div`
             }
         }
     }
+
+    ${props => {
+        if (props.$for === RADIO_COMPONENT_TYPE.HEADER) {
+            //If for Header, load the header specific css
+            return headerCss;
+        } else {
+            //else load the landingpage specific css (default)
+            return landingPageCss;
+        }
+    }}
 `;
