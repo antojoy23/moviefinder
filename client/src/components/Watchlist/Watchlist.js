@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import { createPortal } from 'react-dom';
+
 import BookmarkIcon from '../common/icons/BookmarkIcon'
+import WatchlistPanel from './WatchlistPanel/WatchlistPanel';
 
 import { StyledWatchlist } from './Watchlist.style'
-import WatchlistPanel from './WatchlistPanel/WatchlistPanel';
 
 export default function Watchlist() {
     const [showWatchlistPanel, setShowFavoritesPanel] = useState(false);

@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { StyledWatchlistPanel, StyledWatchlistPanelOverlay } from './WatchlistPanel.style'
-import { getWatchlist, removeFromWatchlist } from '../../../utils/watchlistAPI'
 import LoadingDots from '../../common/LoadingDots/LoadingDots';
 import TitleCard from '../../TitleListing/TitleCard/TitleCard';
 
 import CrossIcon from '../../../assets/icons/cross.svg';
+
+import { getWatchlist, removeFromWatchlist } from '../../../utils/watchlistAPI'
+
+import { StyledWatchlistPanel, StyledWatchlistPanelOverlay } from './WatchlistPanel.style'
 
 export default function WatchlistPanel({ onHidePanel }) {
     const [isLoading, setIsLoading] = useState(false);
