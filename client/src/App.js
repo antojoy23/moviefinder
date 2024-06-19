@@ -28,7 +28,7 @@ function App() {
   const [searchType, setSearchType] = useState("any");
   const [selectedTitle, setSelectedTitle] = useState(null);
 
-  const { getTitles, isLoading: searchLoading, error: searchError } = useTitleSearch(setTitlesData);
+  const { getTitles, isLoading: searchLoading, error: searchError, setError } = useTitleSearch(setTitlesData);
   const { filteredTitles, unfiltredTitles } = titlesData;
 
   const yearRange = useRef(DEFAULT_YEAR_RANGE);
@@ -42,6 +42,7 @@ function App() {
     previousSearchType.current = type;
     // For each new search we will be resetting the values
     setSelectedTitle(null);
+    setError(false);
     getTitles({
       searchTerm: term,
       searchType: type,
@@ -69,7 +70,7 @@ function App() {
   const resolveMainComponent = () => {
     // Incase of error we will be rendering the error component
     if (searchError) {
-      if (searchError === "Movie not found!") {
+      if (searchError.includes("not found")) {
         return <EmptySearch searchTerm={searchTerm} searchType={searchType} />;
       }
       return <SearchError />

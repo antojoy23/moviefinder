@@ -20,8 +20,8 @@ export const searchTitle = ({ searchTerm, searchType, page }) => {
                 body: JSON.stringify(body)
             });
             const responseBody = await result.json();
-            const response = responseBody["response"]
-            if (response["Error"]) {
+            const response = responseBody["response"];
+            if (response["Response"] === "False") {
                 reject(response);
             } else {
                 resolve(response)

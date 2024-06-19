@@ -11,7 +11,7 @@ const RADIO_OPTIONS = [
     { id: "any", value: "any", label: "Any" },
     { id: "movie", value: "movie", label: "Movies" },
     { id: "series", value: "series", label: "Series" },
-    { id: "episodes", value: "episode", label: "Episodes" },
+    { id: "episode", value: "episode", label: "Episodes" },
 ];
 
 

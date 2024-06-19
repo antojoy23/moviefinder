@@ -29,11 +29,11 @@ export default function useTitleSearch(setTitles) {
             setTitles({ filteredTitles: [...filteredTitles, ...currentFilteredTitles], unfiltredTitles: completeTitleList, totalTitles, hasMoreTitles, currentPage });
             setIsLoading(false);
         } catch (ex) {
-            setIsLoading(false);
             setError(ex["Error"]);
+            setIsLoading(false);
         }
     }
 
-    return { getTitles, isLoading, error };
+    return { getTitles, isLoading, error, setError };
 
 }
