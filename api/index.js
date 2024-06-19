@@ -3,7 +3,6 @@ import fetch from 'node-fetch';
 import cors from 'cors';
 import { configDotenv } from 'dotenv';
 import { OMDB_TYPES } from './omdbConstants.mjs';
-// import { RESPONSE, SINGLE_RESPONSE } from './test/testData.mjs';
 
 const app = express();
 const port = 9000;
@@ -18,7 +17,7 @@ app.use(cors());
 app.use(express.json());
 
 app.get('/', (req, res) => {
-    res.send("All working fine");
+    res.send("Hola!");
 });
 
 app.get('/api/search/:id', async (req, res) => {
@@ -29,18 +28,12 @@ app.get('/api/search/:id', async (req, res) => {
         let uri = encodeURI(`http://www.omdbapi.com/?${queryParams}`)
         response = await fetch(uri);
         response = await response.json();
-        // response = SINGLE_RESPONSE;
     } catch (ex) {
         response.error = true
     }
     res.json({
         response
     });
-    // setTimeout(() => {
-    //     res.json({
-    //         response
-    //     });
-    // }, 3000)
 });
 
 app.post('/api/search', async (req, res) => {
@@ -65,18 +58,12 @@ app.post('/api/search', async (req, res) => {
         let uri = encodeURI(`http://www.omdbapi.com/?${queryParams}`)
         response = await fetch(uri);
         response = await response.json();
-        // response = RESPONSE;
     } catch (ex) {
         response.error = true
     }
     res.json({
         response
     });
-    // setTimeout(() => {
-    //     res.json({
-    //         response
-    //     });
-    // }, 3000)
 });
 
 app.listen(port, () => {
