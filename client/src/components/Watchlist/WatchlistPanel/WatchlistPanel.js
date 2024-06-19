@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { forwardRef, useEffect, useState } from 'react'
 import LoadingDots from '../../common/LoadingDots/LoadingDots';
 import TitleCard from '../../TitleListing/TitleCard/TitleCard';
 
@@ -6,9 +6,9 @@ import CrossIcon from '../../../assets/icons/cross.svg';
 
 import { getWatchlist, removeFromWatchlist } from '../../../utils/watchlistAPI'
 
-import { StyledWatchlistPanel, StyledWatchlistPanelOverlay } from './WatchlistPanel.style'
+import { StyledWatchlistPanel, StyledWatchlistPanelContainer, StyledWatchlistPanelOverlay } from './WatchlistPanel.style'
 
-export default function WatchlistPanel({ onHidePanel }) {
+const WatchlistPanel = forwardRef(({ onHidePanel }, ref) => {
     const [isLoading, setIsLoading] = useState(false);
     const [watchlist, setWatchlist] = useState({});
 
@@ -60,7 +60,7 @@ export default function WatchlistPanel({ onHidePanel }) {
         }
     }
     return (
-        <>
+        <StyledWatchlistPanelContainer ref={ref}>
             <StyledWatchlistPanelOverlay onClick={onHidePanel}>
             </StyledWatchlistPanelOverlay>
             <StyledWatchlistPanel>
@@ -70,6 +70,8 @@ export default function WatchlistPanel({ onHidePanel }) {
                 </div>
                 {resolveComponent()}
             </StyledWatchlistPanel>
-        </>
+        </StyledWatchlistPanelContainer>
     )
-}
+});
+
+export default WatchlistPanel;
