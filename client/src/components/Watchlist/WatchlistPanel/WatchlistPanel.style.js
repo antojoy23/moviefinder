@@ -150,9 +150,6 @@ export const StyledWatchlistPanelContainer = styled.div`
         transform: translateX(0);
         transition: transform 300ms ease;
     }
-    &.watchlist-panel-enter-done ${StyledWatchlistPanel} {
-        transform: translateX(0);
-    }
     &.watchlist-panel-exit ${StyledWatchlistPanel} {
         transform: translateX(0);
     }
