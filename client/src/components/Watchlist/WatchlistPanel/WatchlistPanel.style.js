@@ -10,8 +10,7 @@ export const StyledWatchlistPanel = styled.section`
     border-left: 1px solid rgb(221,221,221);
     box-shadow: -2px 0 5px rgba(0, 0, 0, 0.20);
     z-index: 101;
-    transform: translateX(100%);
-    transition: width 300ms, transform 300ms ease;
+    transition: width 300ms;
 
     // For Laptops and small screens
     @media (769px <= width <= 1024px) {
@@ -140,8 +139,6 @@ export const StyledWatchlistPanelOverlay = styled.div`
     left: 0;
     background-color: rgba(0, 0, 0, 0.2);;
     z-index: 100;
-    opacity: 0;
-    transition: opacity 300ms ease;
 `;
 
 export const StyledWatchlistPanelContainer = styled.div`
@@ -151,6 +148,7 @@ export const StyledWatchlistPanelContainer = styled.div`
     }
     &.watchlist-panel-enter-active ${StyledWatchlistPanel} {
         transform: translateX(0);
+        transition: transform 300ms ease;
     }
     &.watchlist-panel-enter-done ${StyledWatchlistPanel} {
         transform: translateX(0);
@@ -160,6 +158,7 @@ export const StyledWatchlistPanelContainer = styled.div`
     }
     &.watchlist-panel-exit-active ${StyledWatchlistPanel} {
         transform: translateX(100%);
+        transition: transform 300ms ease;
     }
 
     // Overlay opacity transition
@@ -168,14 +167,13 @@ export const StyledWatchlistPanelContainer = styled.div`
     }
     &.watchlist-panel-enter-active ${StyledWatchlistPanelOverlay} {
         opacity: 1;
-    }
-    &.watchlist-panel-enter-done ${StyledWatchlistPanelOverlay} {
-        opacity: 1;
+        transition: opacity 300ms ease;
     }
     &.watchlist-panel-exit ${StyledWatchlistPanelOverlay} {
         opacity: 1;
     }
     &.watchlist-panel-exit-active ${StyledWatchlistPanelOverlay} {
         opacity: 0;
+        transition: opacity 300ms ease;
     }
 `;
