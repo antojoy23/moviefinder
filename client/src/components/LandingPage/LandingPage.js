@@ -9,9 +9,12 @@ import useLazyLoadImage from '../../hooks/useLazyLoadImage';
 import { StyledLandingPage, StyledLandingSection } from './LandingPage.style';
 
 import SearchIcon from '../../assets/icons/search.svg';
-import LandingPageBg from '../../assets/images/landing-page-bg.jpg';
 
 import { SEARCH_TYPES } from '../../constants/titles';
+import TypeSelector from '../common/TypeSelector/TypeSelector';
+
+//Laoding from public folder for better caching
+const LandingPageBg = "/assets/images/landing-page-bg.jpg";
 
 export default function LandingPage({ onTitleSearch, onTypeChange }) {
 
@@ -60,27 +63,7 @@ export default function LandingPage({ onTitleSearch, onTypeChange }) {
                         placeholder={`Search ${SEARCH_TYPES[searchType]}`}
                     />
                 </div>
-                {/* Can be moved to a radio group component and resued in Header component along with the search input */}
-                <div className='title-type-group'>
-                    <div className='title-type-options'>
-                        <div>
-                            <input type="radio" id="any" onChange={handleTypeChange} name="type" value="any" checked={searchType === "any"} />
-                            <label htmlFor="any">Any</label>
-                        </div>
-                        <div>
-                            <input type="radio" id="movie" onChange={handleTypeChange} name="type" value="movie" checked={searchType === "movie"} />
-                            <label htmlFor="movie">Movies</label>
-                        </div>
-                        <div>
-                            <input type="radio" id="series" onChange={handleTypeChange} name="type" value="series" checked={searchType === "series"} />
-                            <label htmlFor="series">Series</label>
-                        </div>
-                        <div>
-                            <input type="radio" id="episodes" onChange={handleTypeChange} name="type" value="episode" checked={searchType === "episode"} />
-                            <label htmlFor="episodes">Episodes</label>
-                        </div>
-                    </div>
-                </div>
+                <TypeSelector onChange={handleTypeChange} searchType={searchType} showLabel={false} />
             </StyledLandingSection>
         </StyledLandingPage>
     )

@@ -78,26 +78,4 @@ export const StyledLandingSection = styled.section`
             }
         }
     }
-
-    .title-type-group {
-        color: white;
-        margin-top: 20px;
-
-        .title-type-options {
-            display: flex;
-            font-size: 14px;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-
-            div {
-                display: flex;
-                align-items: center;
-            }
-
-            input {
-                margin-right: 5px;
-            }
-        }
-    }
 `;

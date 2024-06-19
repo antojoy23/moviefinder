@@ -6,6 +6,7 @@ import { DEFAULT_YEAR_RANGE } from '../../constants/titles';
 import SearchIcon from '../../assets/icons/search.svg';
 
 import { StyledHeader } from './Header.style';
+import TypeSelector, { FOR_COMPONENT } from '../common/TypeSelector/TypeSelector';
 
 export default function Header({ onTitleSearch, onSearchInput, onTypeChange, onYearRangeChange, searchTermDefault, searchTypeDefault }) {
 
@@ -140,29 +141,7 @@ export default function Header({ onTitleSearch, onSearchInput, onTypeChange, onY
                         />
                     </div>
                 </div>
-                <div className='title-type-group'>
-                    <div className='title-type-label'>
-                        TYPE
-                    </div>
-                    <div className='title-type-options'>
-                        <div>
-                            <input type="radio" id="any" onChange={handleTypeChange} name="type" value="any" checked={searchType === "any"} />
-                            <label htmlFor="any">Any</label>
-                        </div>
-                        <div>
-                            <input type="radio" id="movie" onChange={handleTypeChange} name="type" value="movie" checked={searchType === "movie"} />
-                            <label htmlFor="movie">Movies</label>
-                        </div>
-                        <div>
-                            <input type="radio" id="series" onChange={handleTypeChange} name="type" value="series" checked={searchType === "series"} />
-                            <label htmlFor="series">Series</label>
-                        </div>
-                        <div>
-                            <input type="radio" id="episodes" onChange={handleTypeChange} name="type" value="episode" checked={searchType === "episode"} />
-                            <label htmlFor="episodes">Episodes</label>
-                        </div>
-                    </div>
-                </div>
+                <TypeSelector onChange={handleTypeChange} searchType={searchType} forComponent={FOR_COMPONENT.HEADER} />
             </div>
         </StyledHeader>
     )
