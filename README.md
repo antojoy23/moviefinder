@@ -3,7 +3,9 @@ Movie Finder is an online Movies/Series/Episodes finder using the OMDB API.
 
 In addition to viewing the details, filters such as year range, title types are provided.
 
-This project is created using ReactJS and ExpressJS
+This project is created using,\
+Frontend/Client - ReactJS, Styled components\
+Backend/Server - ExpressJS
 
 ## Prerequisites
 Node version : `node >= 12.22`
