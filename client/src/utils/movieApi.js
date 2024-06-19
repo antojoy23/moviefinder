@@ -1,15 +1,15 @@
 const apiEndpoint = process.env.REACT_APP_API_ENDPOINT || "";
 
 export const searchTitle = ({ searchTerm, searchType, page }) => {
-    // let controller = new AbortController();
-    // let signal = controller.signal;
+    let controller = new AbortController();
+    let signal = controller.signal;
     const body = {
         searchTerm,
         searchType,
         page
     }
 
-    return new Promise(async (resolve, reject) => {
+    let requestPromise = new Promise(async (resolve, reject) => {
         try {
             const result = await fetch(`${apiEndpoint}/api/search`, {
                 method: "POST",
@@ -17,6 +17,7 @@ export const searchTitle = ({ searchTerm, searchType, page }) => {
                     "Content-Type": "application/json",
                     "Accept": "application/json"
                 },
+                signal: signal,
                 body: JSON.stringify(body)
             });
             const responseBody = await result.json();
@@ -34,19 +35,22 @@ export const searchTitle = ({ searchTerm, searchType, page }) => {
             }
         }
     });
+
+    return [requestPromise, controller];
 }
 
 export const searchById = ({ id }) => {
-    // let controller = new AbortController();
-    // let signal = controller.signal;
+    let controller = new AbortController();
+    let signal = controller.signal;
 
-    return new Promise(async (resolve, reject) => {
+    let requestPromise = new Promise(async (resolve, reject) => {
         try {
             const result = await fetch(`${apiEndpoint}/api/search/${id}`, {
                 method: "GET",
                 headers: {
                     "Accept": "application/json"
-                }
+                },
+                signal: signal
             });
             const responseBody = await result.json();
             if (responseBody["Error"]) {
@@ -62,4 +66,6 @@ export const searchById = ({ id }) => {
             }
         }
     });
+
+    return [requestPromise, controller];
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { searchTitle } from '../utils/movieApi';
 import { filterTitles } from '../utils/titlesHelper';
 import { DEFAULT_YEAR_RANGE } from '../constants/titles';
@@ -7,12 +7,20 @@ export default function useTitleSearch(setTitles) {
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
 
+    const requestController = useRef();
+
 
     const getTitles = async ({ searchTerm, searchType, page = 0, yearRange = DEFAULT_YEAR_RANGE, unfiltredTitles = [], filteredTitles = [] }) => {
         try {
             setIsLoading(true);
+            try {
+                //Abort any previous request
+                requestController.current && requestController.current.abort();
+            } catch (ex) { }
             let currentPage = page + 1;
-            const titles = await searchTitle({ searchTerm, searchType, page: currentPage });
+            const [searchTitlePromise, controller] = searchTitle({ searchTerm, searchType, page: currentPage });
+            requestController.current = controller;
+            const titles = await searchTitlePromise;
             let totalTitles, currentTitles, hasMoreTitles;
             // Incase of "episode" type the format of response is different
             if (searchType === "episode") {

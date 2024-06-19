@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import { searchById } from '../utils/movieApi';
 
@@ -27,6 +27,8 @@ export const useTitleDetails = (titleId) => {
     const [error, setError] = useState(null);
     const [titleDetails, setTitleDetails] = useState();
 
+    const requestController = useRef();
+
     useEffect(() => {
         if (!titleId) {
             setTitleDetails(null);
@@ -36,7 +38,13 @@ export const useTitleDetails = (titleId) => {
         setError(false);
         const getTitleDetails = async () => {
             try {
-                let details = await searchById({ id: titleId });
+                try {
+                    //Abort any previous request
+                    requestController.current && requestController.current.abort();
+                } catch (ex) { }
+                const [titleDetailsPromise, controller] = searchById({ id: titleId });
+                requestController.current = controller;
+                let details = await titleDetailsPromise;
                 details = formatTitleDetails(details);
                 setTitleDetails(details);
                 setIsLoading(false);
