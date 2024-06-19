@@ -46,7 +46,12 @@ export default function DetailsPanel() {
             removeFromWatchlist(selectedTitle);
             setInWatchlist(false);
         } else {
-            addToWatchlist(selectedTitle);
+            const details = {
+                "Title": titleDetails["Title"],
+                "Year": titleDetails["Year"] || titleDetails["Released"],
+                "Poster": titleDetails["Poster"]
+            }
+            addToWatchlist(selectedTitle, details);
             setInWatchlist(true);
         }
     }

@@ -12,6 +12,7 @@ import SearchIcon from '../../assets/icons/search.svg';
 
 import { SEARCH_TYPES } from '../../constants/titles';
 import TypeSelector from '../common/TypeSelector/TypeSelector';
+import Watchlist from '../Watchlist/Watchlist';
 
 //Laoding from public folder for better caching
 const LandingPageBg = "/assets/images/landing-page-bg.jpg";
@@ -65,6 +66,7 @@ export default function LandingPage({ onTitleSearch, onTypeChange }) {
                 </div>
                 <TypeSelector onChange={handleTypeChange} searchType={searchType} showLabel={false} />
             </StyledLandingSection>
+            <Watchlist />
         </StyledLandingPage>
     )
 }

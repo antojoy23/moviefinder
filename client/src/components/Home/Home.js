@@ -2,6 +2,7 @@ import React from 'react';
 
 import TitleListing from '../TitleListing/TitleListing';
 import DetailsPanel from '../DetailsPanel/DetailsPanel';
+import Watchlist from '../Watchlist/Watchlist';
 
 export default function Home({ yearRange }) {
 
@@ -11,6 +12,7 @@ export default function Home({ yearRange }) {
                 yearRange={yearRange}
             />
             <DetailsPanel />
+            <Watchlist />
         </>
     )
 }

@@ -6,10 +6,10 @@ const setLocalStaorage = (val) => {
     localStorage.setItem(KEY_NAME, val);
 }
 
-export const addToWatchlist = (titleId) => {
+export const addToWatchlist = (titleId, titleDetails) => {
     let watchlist = getWatchlist();
     let newObj = {};
-    newObj[titleId] = true;
+    newObj[titleId] = titleDetails;
     watchlist = Object.assign({}, watchlist, newObj)
     setLocalStaorage(JSON.stringify(watchlist));
 }
@@ -29,6 +29,7 @@ export const removeFromWatchlist = (titleId) => {
     let watchlist = getWatchlist();
     delete watchlist[titleId];
     setLocalStaorage(JSON.stringify(watchlist));
+    return watchlist;
 }
 
 export const removeWatchlist = () => {

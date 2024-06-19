@@ -4,7 +4,7 @@ import MovieReelIcon from '../../common/icons/MovieReelIcon';
 
 import { StyledTitleCard } from './TitleCard.style'
 
-const TitleCard = forwardRef(({ title, onTitleSelect, isSelected }, ref) => {
+const TitleCard = forwardRef(({ titleId, title, onTitleSelect, isSelected, watchlist, onRemove }, ref) => {
 
     const resolvePoster = () => {
         // If there is no Poster Image in the title data, show an empty box with Movie reel icon
@@ -16,14 +16,25 @@ const TitleCard = forwardRef(({ title, onTitleSelect, isSelected }, ref) => {
     }
 
     return (
-        <StyledTitleCard ref={ref} onClick={onTitleSelect} $isSelected={isSelected} data-id={title["imdbID"]}>
+        <StyledTitleCard
+            ref={ref}
+            onClick={onTitleSelect}
+            $isSelected={isSelected}
+            data-id={title["imdbID"] || titleId}
+            $forWatchlist={watchlist}
+        >
             <div className='poster-image-container'>
                 {resolvePoster()}
             </div>
-            <section>
+            <section className='title-meta'>
                 <p className='title'>{title["Title"]}</p>
                 <p className='year'>{title["Year"] || title["Released"]}</p>
             </section>
+            {watchlist && (
+                <section className='watchlist-remove' data-id={title["imdbID"] || titleId} onClick={onRemove}>
+                    <div>Remove</div>
+                </section>
+            )}
         </StyledTitleCard>
     )
 });
