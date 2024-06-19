@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from 'react'
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 
 import TitleCard from './TitleCard/TitleCard'
 import LoadingDots from '../common/LoadingDots/LoadingDots';
@@ -24,6 +24,8 @@ export default function TitleListing({ yearRange }) {
     const selectedTitle = useContext(SelectedTitleContext);
     const setSelectedTitle = useContext(SetSelectedTitleContext);
 
+    const [filteredResultsTotalCount, setFilteredResultsTotalCount] = useState();
+
     const { getTitles, isLoading } = useTitleSearch(setTitlesData);
     const { filteredTitles, unfiltredTitles, totalTitles, hasMoreTitles, currentPage } = titlesData;
 
@@ -32,10 +34,10 @@ export default function TitleListing({ yearRange }) {
     const observeElementRef = useRef();
     const loadMoreCalled = useRef(false);
 
-    const handleTitleSelect = (e) => {
-        let title = e.currentTarget.getAttribute("data-id");
-        setSelectedTitle(title);
-    }
+    useEffect(() => {
+        let newTotalCount = totalTitles - (unfiltredTitles.length - filteredTitles.length);
+        setFilteredResultsTotalCount(newTotalCount);
+    }, [filteredTitles, unfiltredTitles, totalTitles])
 
     useEffect(() => {
         loadMoreCalled.current = false;
@@ -74,33 +76,61 @@ export default function TitleListing({ yearRange }) {
         }
     }, [titlesData, currentPage, filteredTitles, getTitles, hasMoreTitles, searchTerm, searchType, unfiltredTitles, yearRange]);
 
+    //Prevent unwanted re-renders of the list
+    const titleCards = useMemo(() => {
+
+        const handleTitleSelect = (e) => {
+            let title = e.currentTarget.getAttribute("data-id");
+            setSelectedTitle(title);
+        }
+
+        return filteredTitles.map((title, idx) => {
+            // Setting the last card to be the observer element of Intersection observer
+            if (idx === filteredTitles.length - 1) {
+                return <TitleCard
+                    ref={observeElementRef}
+                    onTitleSelect={handleTitleSelect}
+                    isSelected={selectedTitle === title["imdbID"]}
+                    key={title["imdbID"]}
+                    title={title} />
+            }
+            return <TitleCard
+                onTitleSelect={handleTitleSelect}
+                isSelected={selectedTitle === title["imdbID"]}
+                key={title["imdbID"]}
+                title={title} />
+        })
+    }, [filteredTitles, selectedTitle, setSelectedTitle])
+
+    const resolveComponent = () => {
+        if (filteredTitles.length === 0 && !hasMoreTitles) {
+            return (
+                <div className='titles-empty'>
+                    <h4>No results found!</h4>
+                    <p>Try searching with a different search term or search filter &#128522;</p>
+                </div>
+            )
+        } else {
+            return (
+                <>
+                    {titleCards}
+                    {isLoading && (
+                        <div className='loading-container'>
+                            <LoadingDots />
+                        </div>
+                    )}
+                </>
+            )
+        }
+    }
+
     return (
         <StyledSection ref={intersectionRootRef}>
             <div className='title-results-count'>
-                {searchType === "episode" ? "Seasons" : `${SEARCH_TYPES[searchType]}`} : {totalTitles}
+                {searchType === "episode" ? "Seasons" : `${SEARCH_TYPES[searchType]}`} : {filteredResultsTotalCount}
             </div>
             <div className='title-list-container'>
-                {filteredTitles.map((title, idx) => {
-                    // Setting the last card to be the observer element of Intersection observer
-                    if (idx === filteredTitles.length - 1) {
-                        return <TitleCard
-                            ref={observeElementRef}
-                            onTitleSelect={handleTitleSelect}
-                            isSelected={selectedTitle === title["imdbID"]}
-                            key={title["imdbID"]}
-                            title={title} />
-                    }
-                    return <TitleCard
-                        onTitleSelect={handleTitleSelect}
-                        isSelected={selectedTitle === title["imdbID"]}
-                        key={title["imdbID"]}
-                        title={title} />
-                })}
-                {isLoading && (
-                    <div className='loading-container'>
-                        <LoadingDots />
-                    </div>
-                )}
+                {resolveComponent()}
             </div>
         </StyledSection>
     )

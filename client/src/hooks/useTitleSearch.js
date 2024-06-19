@@ -22,7 +22,7 @@ export default function useTitleSearch(setTitles) {
             } else {
                 totalTitles = Number(titles["totalResults"]);
                 currentTitles = titles["Search"];
-                hasMoreTitles = totalTitles > currentTitles.length;
+                hasMoreTitles = totalTitles > (unfiltredTitles.length + currentTitles.length);
             }
             let completeTitleList = [...unfiltredTitles, ...currentTitles];
             let [currentFilteredTitles] = filterTitles(currentTitles, searchType, yearRange);

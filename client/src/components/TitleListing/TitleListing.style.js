@@ -21,6 +21,19 @@ export const StyledSection = styled.section`
         .loading-container {
             padding: 30px 30px;
         }
+
+        .titles-empty {
+            padding: 0 40px;
+            text-align: center;
+            margin-top: 10px;
+            h4 {
+                font-size: 18px;
+                margin-bottom: 5px;
+            }
+            p {
+                font-size: 16px;
+            }
+        }
     }
 
     // For Laptops and small screens
