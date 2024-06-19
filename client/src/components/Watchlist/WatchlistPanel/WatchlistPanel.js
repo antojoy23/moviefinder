@@ -52,8 +52,7 @@ export default function WatchlistPanel({ onHidePanel }) {
         } else {
             return (
                 <div className='empty-watchlist'>
-                    <p>Seems like you haven't add any titles to your watchlist.</p>
-                    <p>Check back here once its added &#128522;</p>
+                    <p>Seems like you dont have any titles added to your watchlist &#128533;</p>
                 </div>
             )
         }

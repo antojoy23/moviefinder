@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const StyledWatchlistPanel = styled.section`
-    width: 500px;
+    width: 400px;
     position: fixed;
     right: 0;
     top: 0;
@@ -10,6 +10,22 @@ export const StyledWatchlistPanel = styled.section`
     border-left: 1px solid rgb(221,221,221);
     box-shadow: -2px 0 5px rgba(0, 0, 0, 0.20);
     z-index: 101;
+    transition: width 300ms;
+
+    // For Laptops and small screens
+    @media (769px <= width <= 1024px) {
+        width: 400px;
+    }
+
+    // For Desktops and large screens
+    @media (1025px <= width <= 1200px) {
+        width: 450px;
+    }
+
+    // For Extra large screens
+    @media (width >= 1201px) {
+        width: 500px;
+    }
 
     .watchlist-cards {
         height: calc(100% - 50px);
@@ -30,6 +46,7 @@ export const StyledWatchlistPanel = styled.section`
         img {
             width: 30px;
             height: 30px;
+            border-radius: 50%;
             margin-right: 10px;
             cursor: pointer;
             box-shadow: 0 0 5px transparent;
@@ -78,12 +95,31 @@ export const StyledWatchlistPanel = styled.section`
 
     .empty-watchlist {
         margin-top: 10px;
-        padding: 10px;
+        padding: 10px 30px;
+        font-size: 16px;
         display: flex;
         flex-direction: column;
         align-items: center;
         gap: 5px;
         text-align: center;
+        transition: font-size 300ms, padding 300ms;
+        // For Laptops and small screens
+        @media (769px <= width <= 1024px) {
+            font-size: 16px;
+            padding: 10px 30px;
+        }
+
+        // For Desktops and large screens
+        @media (1025px <= width <= 1200px) {
+            font-size: 18px;
+            padding: 10px 40px;
+        }
+
+        // For Extra large screens
+        @media (width >= 1201px) {
+            font-size: 20px;
+            padding: 10px 50px;
+        }
     }
 
     .loading {
