@@ -32,8 +32,14 @@ function App() {
   const { filteredTitles, unfiltredTitles } = titlesData;
 
   const yearRange = useRef(DEFAULT_YEAR_RANGE);
+  const previousSearchTerm = useRef(searchTerm);
+  const previousSearchType = useRef(searchType);
 
   const handleSearchTitle = async (term = searchTerm, type = searchType) => {
+    // Avoid re-fetch if the search type and search term has not changed
+    if (previousSearchTerm.current === term && previousSearchType.current === type) return;
+    previousSearchTerm.current = term;
+    previousSearchType.current = type;
     // For each new search we will be resetting the values
     setSelectedTitle(null);
     getTitles({
